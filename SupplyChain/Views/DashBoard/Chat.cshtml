@@ -1,0 +1,126 @@
+﻿@{
+    ViewData["Title"] = "Chat With Support";
+}
+
+@{
+    Layout = "_LayoutDashBoard";
+}
+
+
+
+
+<main id="main" class="main">
+
+   
+    <section class="">
+            
+        <div class="container">
+
+          <div class="">
+            <div class="">
+      
+            <div class="chat-container">
+                        <h3 class="card-title" style="text-align: center">Support Team</h3>
+                <div class="chat-box" id="chatBox">
+                    <!-- Chat messages will be appended here -->
+                </div>
+                <div class="input-group">
+                    <input type="text" id="userMessage" class="form-control" placeholder="Type a message">
+                    <div class="input-group-append">
+                        <button class="btn" onclick="sendMessage()">Send</button>
+                    </div>
+                </div>
+            </div>
+            </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+            <style>
+       /*  body {
+            background-color: #f8f9fa;
+        } */
+        .chat-container {
+            max-width: 800px;
+            margin: 5px auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        .chat-box {
+            height: 400px;
+            overflow-y: scroll;
+            border: 1px solid #e9ecef;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 20px;
+            background-color: #f8f9fa;
+        }
+        .chat-box p {
+            margin: 0;
+            padding: 5px 10px;
+            border-radius: 20px;
+            max-width: 75%;
+        }
+        .chat-box .user {
+            text-align: right;
+        }
+        .chat-box .user p {
+            background-color: #007bff;
+            color: #fff;
+            align-self: flex-end;
+        }
+        .chat-box .bot p {
+            background-color: #e2e3e5;
+            align-self: flex-start;
+        }
+        .input-group {
+            border-radius: 20px;
+            overflow: hidden;
+        }
+        .input-group input {
+            border-right: none;
+        }
+        .input-group .btn {
+            border-left: none;
+            background-color: #007bff;
+            color: #fff;
+        }
+    </style> 
+
+@section scripts {
+   <script>
+    function sendMessage() {
+        var message = document.getElementById("userMessage").value;
+        if (!message.trim()) return;
+
+        // Append user's message to chat box
+        var chatBox = document.getElementById("chatBox");
+        chatBox.innerHTML += '<div class="user"><p>' + message + '</p></div>';
+        
+        // Scroll to the bottom of chat box
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        // Clear input
+        document.getElementById("userMessage").value = '';
+
+        // AJAX call to get bot response
+        // $.ajax({
+        //     type: "POST",
+        //     url: "./GetResponse",
+        //     data: { message: message },
+        //     success: function (response) {
+        //         // Append bot's response to chat box
+        //         chatBox.innerHTML += '<div class="bot"><p>' + response.response + '</p></div>';
+                
+        //         // Scroll to the bottom of chat box
+        //         chatBox.scrollTop = chatBox.scrollHeight;
+        //     }
+        // });
+    }
+</script>
+
+}
+

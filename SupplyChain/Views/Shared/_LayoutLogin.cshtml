@@ -1,0 +1,56 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  
+    <!-- Google Fonts -->
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+      <link rel="apple-touch-icon" sizes="180x180" href="~/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="~/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="~/favicon-16x16.png">
+    <link rel="icon" type="image/x-icon" href="~/favicon.ico">
+    <!-- Vendor CSS Files -->
+    <link href="~/assetsboard/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/assetsboard/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="~/assetsboard/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="~/assetsboard/vendor/quill/quill.snow.css" rel="stylesheet">
+    <link href="~/assetsboard/vendor/quill/quill.bubble.css" rel="stylesheet">
+    <link href="~/assetsboard/vendor/remixicon/remixicon.css" rel="stylesheet">
+    <link href="~/assetsboard/vendor/simple-datatables/style.css" rel="stylesheet">
+
+    <!-- Template Main CSS File -->
+    <link href="~/assetsboard/css/style.css" rel="stylesheet">
+    <title>@ViewData["Title"] - Supply Chain</title>
+
+    <link href="~/lib/sweetalert/dist/sweetalert2.min.css" />
+</head>
+<body>
+  
+    @RenderBody()
+
+   
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/lib/sweetalert/dist/sweetalert2.all.min.js"></script>
+    <script src="~/lib/popper/popper.min.js"></script>
+    <script src="~/assetsboard/vendor/apexcharts/apexcharts.min.js"></script>
+    <script src="~/assetsboard/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/assetsboard/vendor/chart.js/chart.umd.js"></script>
+    <script src="~/assetsboard/vendor/echarts/echarts.min.js"></script>
+    <script src="~/assetsboard/vendor/quill/quill.min.js"></script>
+    <script src="~/assetsboard/vendor/simple-datatables/simple-datatables.js"></script>
+    <script src="~/assetsboard/vendor/tinymce/tinymce.min.js"></script>
+    <script src="~/assetsboard/vendor/php-email-form/validate.js"></script>
+
+
+    <script src="assetsboard/js/main.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

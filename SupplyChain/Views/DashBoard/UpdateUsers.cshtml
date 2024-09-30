@@ -1,0 +1,210 @@
+﻿@model List<LoginPageModel>
+
+@{
+    ViewData["Title"] = "Roles";
+}
+@{
+    Layout = "_LayoutDashBoard";
+}
+
+<main id="main" class="main">
+
+
+    <section class="section">
+
+        <div class="container">
+            <div class="card">
+                <div class="card-body">
+
+<div class="col-12 mt-3 mb-3 text-center text-success">
+    <h2> Roles</h2>
+    <hr />
+</div>
+@if (!string.IsNullOrWhiteSpace(ViewBag.Message))
+{
+    <div class="d-grid justify-content-center">
+    <div class="bg-black text-light p-2">
+        @ViewBag.Message
+    </div>
+    </div>
+}
+<section id="portfolio" class="portfolio">
+    <div class="container">
+
+        <div class="device-cover">
+        @if (Model is not { Count: > 0 })
+        {
+                <div class="col-12">
+                    <h3>Sorry, There are no user to display</h3>
+                </div>
+        }
+        else
+        {
+            foreach (var user in Model)
+            {
+                       <div class="col-4"> 
+                        <table class="table table-striped">
+                            <tr>
+                                <th>Email</th>
+                                <td> @user.Email</td>
+                            </tr>
+                            <tr>
+                                <th>Name</th>
+                                <td>@user.FirstName @user.Surname</td>
+                            </tr>
+                            <tr>
+                                <th>Telephone</th>
+                                <td>@user.TelephoneNumber</td>
+                            </tr>
+                            <tr>
+                                <th>Joined</th>
+                                <td>@user.RegistrationDate</td>
+                            </tr>
+                            <tr>
+                                <th>Roles</th>
+                            <td>@user.Roles.Count()
+                            @{if (user.Roles.Count() >= 8)
+                            {
+                               <span class="text-success">(ADMIN)</span>
+                            } else if (user.Roles.Count() >= 4)
+                            {
+                                        <span class="text-warning">(WORKER)</span>
+                            }else 
+                            {
+                                        <span class="text-info">(USER)</span>
+                            }}
+                            </td>
+                        </tr>
+                            <tr>
+                                    <td colspan="2">
+                                       <button type="button"
+                                class="btn btn-success btn-sm mr-3"
+                                onclick="Clocked('@user.Id')"
+                                style="border-radius: 15px;">
+                                    View Full User Details
+                                </button>
+                                 </td> 
+                            </tr>
+                        </table>
+                    </div>
+            }
+        }
+    </div>
+</div>
+</section>
+                </div>
+            </div>
+    </section>
+</main>
+<div class="modal fade" id="viewUserModal" tabindex="-1" 
+     role="dialog" aria-labelledby="exampleModalCenterTitle" 
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="text-align: center">
+                <h4 class="modal-title" style="text-align: center">
+                    User Details
+                </h4>
+            </div>
+            <div class="modal-body" id="userSummaryDetails">
+            </div>
+            <div class="modal-footer" style="text-align: center">
+                <button type="button"
+                        class="btn btn-warning"
+                        data-bs-dismiss="modal">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="viewUserRoleModal" tabindex="-1" 
+     role="dialog" aria-labelledby="exampleModalCenterTitle" 
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content bg-info text-light">
+            <div class="modal-header" style="text-align: center">
+                <h4 class="modal-title" style="text-align: center">
+                    User Roles
+                </h4>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+            </div>
+            <form asp-controller="Dashboard" asp-action="UpdateRoles" method="post">
+            <div class="modal-body" id="userRoleSummaryDetails">
+                <div>
+                        <h2>NB: This user manages the assigned pages (roles).</h2>
+                </div>
+                    <div class="form-group">
+                        <input class="bg-info text-info" style="height: 0px; width: 0px;" type="text" name="identification" id="newUserIdentification" />
+                            @{
+                                var roles = new List<string>
+                            {
+                            UsersRoles.Checkout,
+                            UsersRoles.Cart,
+                            UsersRoles.Orders,
+                            UsersRoles.UpdateUsers,
+                            UsersRoles.AddItem,
+                            UsersRoles.Chat,
+                            UsersRoles.Item,
+                            UsersRoles.ViewItem,
+                            };
+                            }
+                            <select name="roles" id="roles" data-title="Update User Role"
+                                    data-style-base="btn-lg"
+                                    class="selectpicker form-control text-center btn-lg"
+                                    multiple data-max-options="5">
+                                @foreach (var role in roles)
+                                {
+                                    <option value="@role">@role</option>
+                                }
+                            </select>
+                        </div>
+            </div>
+            <div class="modal-footer d-grid justify-content-center" style="text-align: center;">
+                <button type="submit"
+                        class="btn btn-success btn-lg">
+                    Update
+                </button>
+            </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+<style>
+
+    .device-cover {
+        display: grid;
+        max-width: 100%;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr) );
+        gap: 2.5rem;
+    }
+</style>
+@section Scripts {
+        <script type="text/javascript">
+           function Clocked(value) {
+            $.ajax({
+                url: "./UpdateUsers",
+                type: "POST",
+                data: { "Identification": value },
+                success: function (data) {
+                    if (data === "0") {
+                        Swal.fire("Error has occurred getting User Details");
+                    } else {
+                            $("#userSummaryDetails").html(data);
+                        $("#viewUserModal").modal("show");
+                    }
+                }
+            });
+        } 
+        
+        function openRoleModal(value) {
+            $("#viewUserRoleModal").modal("show");
+            document.getElementById('newUserIdentification').value = value;
+        }
+
+        </script>
+}

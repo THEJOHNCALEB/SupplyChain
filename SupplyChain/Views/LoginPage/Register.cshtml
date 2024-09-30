@@ -1,0 +1,331 @@
+﻿@{
+    ViewData["Title"] = "Get Started";
+}
+
+@{
+    Layout = "_LayoutLogin";
+}
+
+<main>
+    <div class="container">
+
+        <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
+
+                        <div class="d-flex justify-content-center py-4">
+                            <a asp-action="Index" asp-controller="Home" class="logo d-flex align-items-center w-auto">
+                                <img src="~/assets/img/logo.png" alt="logo">
+                            </a>
+                        </div>
+                        @if (!string.IsNullOrWhiteSpace(ViewBag.ErrorMessage))
+                        {
+                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                @ViewBag.ErrorMessage
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        } @if (!string.IsNullOrWhiteSpace(ViewBag.Message))
+                        {
+                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                @ViewBag.Message
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        }
+
+                        <div class="card mb-3">
+
+                            <div class="card-body">
+                                <!-- Default Tabs -->
+                               
+                                <div class="tab-content pt-2" id="myTabjustifiedContent">
+                                    <div class="tab-pane fade show active" id="home-justified" role="tabpanel" aria-labelledby="home-tab">
+                                        <div class="pt-4 pb-2">
+                                            <h5 class="card-title text-center pb-0 fs-4">Create a Personal Account</h5>
+                                            <p class="text-center small">Enter your personal details to create account</p>
+                                        </div>
+
+                                        <form class="row g-3 needs-validation" novalidate asp-controller="LoginPage" asp-action="Register" enctype="multipart/form-data" method="post" class="">
+
+                                            <div class="col-lg-12 col-md-12">
+                                                <div class="form-group mb-2">
+                                                    <label for="surname">Surname</label>
+                                                    <input type="text" name="surname" class="form-control"
+                                                           placeholder="Enter User's Surname"
+                                                           style="border-radius: 10px; height: 50px;" id="surname" required />
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12 col-md-12">
+                                                <div class="form-group mt-2 mb-2">
+                                                    <label for="firstName">First Name</label>
+                                                    <input type="text" name="firstName" class="form-control"
+                                                           placeholder="Enter User's First Name"
+                                                           style="border-radius: 10px; height: 50px;" id="firstName" required />
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-12 col-md-12 ">
+                                                <div class="form-group mt-2 mb-2">
+                                                    <label for="username">User Name</label>
+                                                    <input type="text" name="username" class="form-control"
+                                                           placeholder="Enter User's Username..."
+                                                           style="border-radius: 10px; height: 50px;" id="username" required />
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="col-lg-12 col-md-12 ">
+                                                <div class="form-group mt-2 mb-2">
+                                                    <label for="Role">Role</label>
+                                                    <select id="Role" name="UserRoleString"
+                                                            class="form-select" required>
+                                                        <option value="FARMER">FARMER</option>
+                                                        <option value="DISTRIBUTOR">DISTRIBUTOR</option>
+                                                        <option value="RETAILER">RETAILER</option>
+                                                        <option value="CUSTOMER">CUSTOMER</option>
+
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-12 col-md-12 ">
+                                                <div class="form-group mt-2 mb-2">
+                                                    <label for="email">Email</label>
+                                                    <input type="email" name="email" class="form-control"
+                                                           placeholder="Enter User's Email"
+                                                           style="border-radius: 10px; height: 50px;" id="email" required />
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12 col-md-12 ">
+                                                <div class="form-group mt-2 mb-2">
+                                                    <label for="telephone">Telephone Number</label>
+                                                    <input type="tel" name="telephoneNumber" class="form-control"
+                                                           placeholder="Enter User's Telephone Number"
+                                                           style="border-radius: 10px; height: 50px;" id="telephone" required />
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12 col-md-12 ">
+                                                <div class="form-group mt-2 mb-2">
+                                                    <label for="dateOfBirth">Data of Birth</label>
+                                                    <input type="date" name="DateOfBirth" class="form-control"
+                                                           style="border-radius: 10px; height: 50px;" id="DateOfBirth" />
+                                                </div>
+                                            </div>  <div class="col-lg-12 col-md-12 ">
+                                                <div class="form-group mt-2 mb-2">
+                                                    <label for="dateOfBirth">Profile Picture</label>
+                                                    <input type="file" class="form-control" id="files" name="files" placeholder="Item Image" required>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-12 col-md-12 ">
+                                                <div class="form-group mt-2 mb-2">
+                                                    <label for="password">Password</label>
+                                                    <input type="password" name="password"
+                                                           class="form-control"
+                                                           placeholder="Enter Password"
+                                                           style="border-radius: 10px; height: 50px;"
+                                                           id="password" required />
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12 col-md-12 ">
+                                                <div class="form-group mt-2 mb-2">
+                                                    <label for="confirmPassword">Confirm Password</label>
+                                                    <input type="password" name="confirmPassword"
+                                                           class="form-control"
+                                                           placeholder="Re-Enter User's Password"
+                                                           style="border-radius: 10px; height: 50px;"
+                                                           id="confirmPassword" required />
+                                                </div>
+                                            </div>
+                                          @*   <div class="col-12">
+                                                <div class="form-check">
+                                                    
+                                                    <input class="form-check-input" name="terms" type="checkbox" value="" id="acceptTerms" required>
+                                                   <label class="form-check-label" for="acceptTerms">By signing up, you automatically agree and accept the <a asp-controller="Home" asp-action="Privacy">terms and conditions</a></label>
+                                                    <div class="invalid-feedback">You must agree before submitting.</div>
+                                                </div>
+                                            </div> *@
+                                            <div class="col-12">
+                                                <button class="btn btn-success w-100" type="submit">Create Account</button>
+                                            </div>
+                                            <div class="col-12">
+                                                <p class="small mb-0">Already have an account? <a asp-controller="LoginPage" asp-action="Login">Log in</a></p>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div><!-- End Default Tabs -->
+                            </div>
+                        </div>
+
+                        <div class="credits ">
+                            <span class="text-secondary  text-center">&copy; Supply Chain <script>document.write(new Date().getFullYear())</script></span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+    </div>
+</main><!-- End #main -->
+@section Scripts {
+    <script>
+      
+    </script>
+}
+
+
+
+
+@* <div class="d-grid justify-content-center mt-2 ">
+    <h3 style="color: lightgreen;">Welcome to Medmova</h3>
+</div>
+<form asp-controller="Home" asp-action="Register" enctype="multipart/form-data" method="post" class="" onSubmit="submit.disabled=true; submit.value='Signing you up…' ;">
+    <div class="container join-container mt-3 mb-3">
+
+        <div class="row gy-4 mt-2">
+            @if (!string.IsNullOrWhiteSpace(ViewBag.ErrorMessage))
+            {
+                <div class="col-12 mt-3 text-center">
+                    <div class="error-message">
+                        @ViewBag.ErrorMessage
+                    </div>
+                </div>
+            } @if (!string.IsNullOrWhiteSpace(ViewBag.Message))
+            {
+                <div class="col-12 mt-3 text-center">
+                    <div class="error-message">
+                        @ViewBag.Message
+                    </div>
+                </div>
+            }
+
+            <div class="col-lg-6 col-md-12">
+                <div class="form-group mb-2">
+                    <label for="surname">Surname</label>
+                    <input type="text" name="surname" class="form-control"
+                           placeholder="Enter User's Surname"
+                           style="border-radius: 10px; height: 50px;" id="surname" required />
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-12">
+                <div class="form-group mt-2 mb-2">
+                    <label for="firstName">First Name</label>
+                    <input type="text" name="firstName" class="form-control"
+                           placeholder="Enter User's First Name"
+                           style="border-radius: 10px; height: 50px;" id="firstName" required />
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-12 ">
+                <div class="form-group mt-2 mb-2">
+                    <label for="othernames">Othernames <small class="text-secondary">(optional)</small></label>
+                    <input type="text" name="othernames" class="form-control"
+                           placeholder="Enter User's Othernames"
+                           style="border-radius: 10px; height: 50px;" id="othernames" />
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-12 ">
+                <div class="form-group mt-2 mb-2">
+                    <label for="username">User Name</label>
+                    <input type="text" name="username" class="form-control"
+                           placeholder="Enter User's Username..."
+                           style="border-radius: 10px; height: 50px;" id="username" required />
+                </div>
+            </div>
+
+            <div class="col-lg-6 col-md-12 ">
+                <div class="form-group mt-2 mb-2">
+                    <label for="email">Email</label>
+                    <input type="email" name="email" class="form-control"
+                           placeholder="Enter User's Email"
+                           style="border-radius: 10px; height: 50px;" id="email" required />
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-12 ">
+                <div class="form-group mt-2 mb-2">
+                    <label for="telephone">Telephone Number</label>
+                    <input type="tel" name="telephoneNumber" class="form-control"
+                           placeholder="Enter User's Telephone Number"
+                           style="border-radius: 10px; height: 50px;" id="telephone" required />
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-12 ">
+                <div class="form-group mt-2 mb-2">
+                    <label for="UserRoleString">Joining Medmova as:</label>
+                    <select class="form-control" name="UserRoleString" id="UserRoleString">
+                            <option selected disabled="disabled">Click here to select...</option>
+                            <option value="Patient">Patient</option>
+                            <option value="Company">Medical Company</option>
+                        </select>
+            </div>
+            </div>
+
+            <div class="col-lg-6 col-md-12 ">
+                <div class="form-group mt-2 mb-2">
+                    <label for="password">Password</label>
+                    <input type="password" name="password"
+                           class="form-control"
+                           placeholder="Enter Password"
+                           style="border-radius: 10px; height: 50px;"
+                           id="password" required />
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-12 ">
+                <div class="form-group mt-2 mb-2">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" name="confirmPassword"
+                           class="form-control"
+                           placeholder="Re-Enter User's Password"
+                           style="border-radius: 10px; height: 50px;"
+                           id="confirmPassword" required />
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-12 ">
+                <div class="form-group mt-2 mb-2">
+                    <label for="confirmPassword">Join medmova's mailing list..</label>
+                    <input type="checkbox" name="mailingList"
+                           class="form-control"
+                           style="border-radius: 10px; height: 50px;"
+                           id="mailinglist" value="true" />
+                </div>
+            </div>
+             <div class="d-grid justify-content-center  mb-2">
+            <div class=" form-group text-center">
+                <input type="submit" name="submit" id="submit" class="btn-lg btn btn-primary form-control"
+                         value="Sign up"/>
+            </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+ *@
+<style>
+    /* body{
+           background-color: #72ddf7;
+       } */
+    /*   body {
+            background-color: #0e1d34;
+            background-image: url("../assets/img/hero-bg.png");
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            padding: 120px 0 60px 0;
+            color: rgba(255, 255, 255, 0.8);
+        } */
+    .header {
+        background-color: var(--color-secondary);
+        background-image: url("../assets/img/hero-bg.png");
+        background-size: cover;
+        background-position: center;
+        position: relative;
+        color: rgba(255, 255, 255, 0.8);
+    }
+
+    .error-message {
+        color: #fff;
+        background: #012970;
+        padding: 15px;
+        font-weight: 600;
+    }
+</style>

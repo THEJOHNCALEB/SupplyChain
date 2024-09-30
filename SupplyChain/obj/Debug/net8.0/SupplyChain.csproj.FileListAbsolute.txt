@@ -1,0 +1,85 @@
+C:\Users\MO'BANKS INC\Desktop\MVC\Projects\SupplyChain\SupplyChain\bin\Debug\net8.0\appsettings.Development.json
+C:\Users\MO'BANKS INC\Desktop\MVC\Projects\SupplyChain\SupplyChain\bin\Debug\net8.0\appsettings.json
+C:\Users\MO'BANKS INC\Desktop\MVC\Projects\SupplyChain\SupplyChain\bin\Debug\net8.0\SupplyChain.staticwebassets.runtime.json
+C:\Users\MO'BANKS INC\Desktop\MVC\Projects\SupplyChain\SupplyChain\bin\Debug\net8.0\SupplyChain.exe
+C:\Users\MO'BANKS INC\Desktop\MVC\Projects\SupplyChain\SupplyChain\bin\Debug\net8.0\SupplyChain.deps.json
+C:\Users\MO'BANKS INC\Desktop\MVC\Projects\SupplyChain\SupplyChain\bin\Debug\net8.0\SupplyChain.runtimeconfig.json
+C:\Users\MO'BANKS INC\Desktop\MVC\Projects\SupplyChain\SupplyChain\bin\Debug\net8.0\SupplyChain.dll
+C:\Users\MO'BANKS INC\Desktop\MVC\Projects\SupplyChain\SupplyChain\bin\Debug\net8.0\SupplyChain.pdb
+C:\Users\MO'BANKS INC\Desktop\MVC\Projects\SupplyChain\SupplyChain\obj\Debug\net8.0\SupplyChain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\MO'BANKS INC\Desktop\MVC\Projects\SupplyChain\SupplyChain\obj\Debug\net8.0\SupplyChain.AssemblyInfoInputs.cache
+C:\Users\MO'BANKS INC\Desktop\MVC\Projects\SupplyChain\SupplyChain\obj\Debug\net8.0\SupplyChain.AssemblyInfo.cs
+C:\Users\MO'BANKS INC\Desktop\MVC\Projects\SupplyChain\SupplyChain\obj\Debug\net8.0\SupplyChain.csproj.CoreCompileInputs.cache
+C:\Users\MO'BANKS INC\Desktop\MVC\Projects\SupplyChain\SupplyChain\obj\Debug\net8.0\SupplyChain.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\MO'BANKS INC\Desktop\MVC\Projects\SupplyChain\SupplyChain\obj\Debug\net8.0\SupplyChain.RazorAssemblyInfo.cache
+C:\Users\MO'BANKS INC\Desktop\MVC\Projects\SupplyChain\SupplyChain\obj\Debug\net8.0\SupplyChain.RazorAssemblyInfo.cs
+C:\Users\MO'BANKS INC\Desktop\MVC\Projects\SupplyChain\SupplyChain\obj\Debug\net8.0\staticwebassets.build.json
+C:\Users\MO'BANKS INC\Desktop\MVC\Projects\SupplyChain\SupplyChain\obj\Debug\net8.0\staticwebassets.development.json
+C:\Users\MO'BANKS INC\Desktop\MVC\Projects\SupplyChain\SupplyChain\obj\Debug\net8.0\staticwebassets\msbuild.SupplyChain.Microsoft.AspNetCore.StaticWebAssets.props
+C:\Users\MO'BANKS INC\Desktop\MVC\Projects\SupplyChain\SupplyChain\obj\Debug\net8.0\staticwebassets\msbuild.build.SupplyChain.props
+C:\Users\MO'BANKS INC\Desktop\MVC\Projects\SupplyChain\SupplyChain\obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.SupplyChain.props
+C:\Users\MO'BANKS INC\Desktop\MVC\Projects\SupplyChain\SupplyChain\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.SupplyChain.props
+C:\Users\MO'BANKS INC\Desktop\MVC\Projects\SupplyChain\SupplyChain\obj\Debug\net8.0\staticwebassets.pack.json
+C:\Users\MO'BANKS INC\Desktop\MVC\Projects\SupplyChain\SupplyChain\obj\Debug\net8.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
+C:\Users\MO'BANKS INC\Desktop\MVC\Projects\SupplyChain\SupplyChain\obj\Debug\net8.0\scopedcss\bundle\SupplyChain.styles.css
+C:\Users\MO'BANKS INC\Desktop\MVC\Projects\SupplyChain\SupplyChain\obj\Debug\net8.0\scopedcss\projectbundle\SupplyChain.bundle.scp.css
+C:\Users\MO'BANKS INC\Desktop\MVC\Projects\SupplyChain\SupplyChain\obj\Debug\net8.0\SupplyChain.dll
+C:\Users\MO'BANKS INC\Desktop\MVC\Projects\SupplyChain\SupplyChain\obj\Debug\net8.0\refint\SupplyChain.dll
+C:\Users\MO'BANKS INC\Desktop\MVC\Projects\SupplyChain\SupplyChain\obj\Debug\net8.0\SupplyChain.pdb
+C:\Users\MO'BANKS INC\Desktop\MVC\Projects\SupplyChain\SupplyChain\obj\Debug\net8.0\SupplyChain.genruntimeconfig.cache
+C:\Users\MO'BANKS INC\Desktop\MVC\Projects\SupplyChain\SupplyChain\obj\Debug\net8.0\ref\SupplyChain.dll
+C:\Users\MO'BANKS INC\Desktop\MVC\Projects\SupplyChain\SupplyChain\obj\Debug\net8.0\SupplyChain.csproj.AssemblyReference.cache
+C:\Users\MO'BANKS INC\Desktop\MVC\Projects\SupplyChain\SupplyChain\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.dll
+C:\Users\MO'BANKS INC\Desktop\MVC\Projects\SupplyChain\SupplyChain\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+C:\Users\MO'BANKS INC\Desktop\MVC\Projects\SupplyChain\SupplyChain\obj\Debug\net8.0\SupplyChain.csproj.CopyComplete
+C:\Users\user\Downloads\SupplyChain\SupplyChain\obj\Debug\net8.0\SupplyChain.csproj.AssemblyReference.cache
+C:\Users\user\Downloads\SupplyChain\SupplyChain\obj\Debug\net8.0\SupplyChain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\user\Downloads\SupplyChain\SupplyChain\obj\Debug\net8.0\SupplyChain.AssemblyInfoInputs.cache
+C:\Users\user\Downloads\SupplyChain\SupplyChain\obj\Debug\net8.0\SupplyChain.AssemblyInfo.cs
+C:\Users\user\Downloads\SupplyChain\SupplyChain\obj\Debug\net8.0\SupplyChain.csproj.CoreCompileInputs.cache
+C:\Users\user\Downloads\SupplyChain\SupplyChain\obj\Debug\net8.0\SupplyChain.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\user\Downloads\SupplyChain\SupplyChain\obj\Debug\net8.0\SupplyChain.RazorAssemblyInfo.cache
+C:\Users\user\Downloads\SupplyChain\SupplyChain\obj\Debug\net8.0\SupplyChain.RazorAssemblyInfo.cs
+C:\Users\user\Downloads\SupplyChain\SupplyChain\obj\Debug\net8.0\SupplyChain.dll
+C:\Users\user\Downloads\SupplyChain\SupplyChain\obj\Debug\net8.0\refint\SupplyChain.dll
+C:\Users\user\Downloads\SupplyChain\SupplyChain\obj\Debug\net8.0\SupplyChain.pdb
+C:\Users\user\Downloads\SupplyChain\SupplyChain\bin\Debug\net8.0\appsettings.Development.json
+C:\Users\user\Downloads\SupplyChain\SupplyChain\bin\Debug\net8.0\appsettings.json
+C:\Users\user\Downloads\SupplyChain\SupplyChain\bin\Debug\net8.0\SupplyChain.staticwebassets.runtime.json
+C:\Users\user\Downloads\SupplyChain\SupplyChain\bin\Debug\net8.0\SupplyChain.exe
+C:\Users\user\Downloads\SupplyChain\SupplyChain\bin\Debug\net8.0\SupplyChain.deps.json
+C:\Users\user\Downloads\SupplyChain\SupplyChain\bin\Debug\net8.0\SupplyChain.runtimeconfig.json
+C:\Users\user\Downloads\SupplyChain\SupplyChain\bin\Debug\net8.0\SupplyChain.dll
+C:\Users\user\Downloads\SupplyChain\SupplyChain\bin\Debug\net8.0\SupplyChain.pdb
+C:\Users\user\Downloads\SupplyChain\SupplyChain\bin\Debug\net8.0\AWSSDK.Core.dll
+C:\Users\user\Downloads\SupplyChain\SupplyChain\bin\Debug\net8.0\AWSSDK.SecurityToken.dll
+C:\Users\user\Downloads\SupplyChain\SupplyChain\bin\Debug\net8.0\BCrypt.Net-Next.dll
+C:\Users\user\Downloads\SupplyChain\SupplyChain\bin\Debug\net8.0\DnsClient.dll
+C:\Users\user\Downloads\SupplyChain\SupplyChain\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.dll
+C:\Users\user\Downloads\SupplyChain\SupplyChain\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+C:\Users\user\Downloads\SupplyChain\SupplyChain\bin\Debug\net8.0\MongoDB.Bson.dll
+C:\Users\user\Downloads\SupplyChain\SupplyChain\bin\Debug\net8.0\MongoDB.Driver.dll
+C:\Users\user\Downloads\SupplyChain\SupplyChain\bin\Debug\net8.0\MongoDB.Driver.Core.dll
+C:\Users\user\Downloads\SupplyChain\SupplyChain\bin\Debug\net8.0\MongoDB.Libmongocrypt.dll
+C:\Users\user\Downloads\SupplyChain\SupplyChain\bin\Debug\net8.0\Newtonsoft.Json.dll
+C:\Users\user\Downloads\SupplyChain\SupplyChain\bin\Debug\net8.0\SharpCompress.dll
+C:\Users\user\Downloads\SupplyChain\SupplyChain\bin\Debug\net8.0\Snappier.dll
+C:\Users\user\Downloads\SupplyChain\SupplyChain\bin\Debug\net8.0\ZstdSharp.dll
+C:\Users\user\Downloads\SupplyChain\SupplyChain\bin\Debug\net8.0\runtimes\linux\native\libmongocrypt.so
+C:\Users\user\Downloads\SupplyChain\SupplyChain\bin\Debug\net8.0\runtimes\osx\native\libmongocrypt.dylib
+C:\Users\user\Downloads\SupplyChain\SupplyChain\bin\Debug\net8.0\runtimes\win\native\mongocrypt.dll
+C:\Users\user\Downloads\SupplyChain\SupplyChain\obj\Debug\net8.0\staticwebassets.build.json
+C:\Users\user\Downloads\SupplyChain\SupplyChain\obj\Debug\net8.0\staticwebassets.development.json
+C:\Users\user\Downloads\SupplyChain\SupplyChain\obj\Debug\net8.0\staticwebassets\msbuild.SupplyChain.Microsoft.AspNetCore.StaticWebAssets.props
+C:\Users\user\Downloads\SupplyChain\SupplyChain\obj\Debug\net8.0\staticwebassets\msbuild.build.SupplyChain.props
+C:\Users\user\Downloads\SupplyChain\SupplyChain\obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.SupplyChain.props
+C:\Users\user\Downloads\SupplyChain\SupplyChain\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.SupplyChain.props
+C:\Users\user\Downloads\SupplyChain\SupplyChain\obj\Debug\net8.0\staticwebassets.pack.json
+C:\Users\user\Downloads\SupplyChain\SupplyChain\obj\Debug\net8.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
+C:\Users\user\Downloads\SupplyChain\SupplyChain\obj\Debug\net8.0\scopedcss\bundle\SupplyChain.styles.css
+C:\Users\user\Downloads\SupplyChain\SupplyChain\obj\Debug\net8.0\scopedcss\projectbundle\SupplyChain.bundle.scp.css
+C:\Users\user\Downloads\SupplyChain\SupplyChain\obj\Debug\net8.0\SupplyChain.csproj.CopyComplete
+C:\Users\user\Downloads\SupplyChain\SupplyChain\obj\Debug\net8.0\SupplyChain.genruntimeconfig.cache
+C:\Users\user\Downloads\SupplyChain\SupplyChain\obj\Debug\net8.0\ref\SupplyChain.dll
+C:\Users\user\Downloads\SupplyChain\SupplyChain\obj\Debug\net8.0\scopedcss\Views\Shared\_LayoutLogin.cshtml.rz.scp.css
+C:\Users\user\Downloads\SupplyChain\SupplyChain\obj\Debug\net8.0\scopedcss\Views\Shared\_LayoutDashBoard.cshtml.rz.scp.css

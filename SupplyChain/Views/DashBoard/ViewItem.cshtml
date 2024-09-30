@@ -1,0 +1,149 @@
+﻿@model List<ItemModel>
+@using SupplyChain.Processor
+
+@{
+    ViewData["Title"] = "View Drug";
+}
+
+@{
+    Layout = "_LayoutDashBoard";
+}
+<main id="main" class="main">
+
+
+    <section class="section">
+
+        <div class="container">
+    <div class="row gy-4" style="color: white;">
+        @if (Model == null || Model.Count <= 0) {
+          
+                <div class="col-12 alert alert-warning alert-dismissible fade show" role="alert">
+                Sorry, There is no Item in Your Catalogue. Start by <a asp-action="AddItem" asp-controller="DashBoard">Adding one Here
+</a>                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+        }
+        else {
+            foreach (var sales in Model) {
+                <div class="col-lg-3">
+
+                    <div class="card">
+                        <div class="card-body">
+                            <img src="~/ItemImages/@sales.Image" class="card-img-top" alt="@sales.CompanyName">
+                                    <h5 class="card-title">@Functions.ToSentenceCase(sales.CompanyName) @Functions.ToSentenceCase(sales.ItemName)</h5>
+                            <h6 class="card-subtitle mb-4 text-muted">@sales.Note</h6>
+                            <h6 class="card-subtitle mb-4 text-secondary">@sales.About</h6>
+                            <div class="d-grid justify-content-center mb-3">
+
+                                        <h3 class="card-text font-weight-light text-warning">&#8358;@string.Format("{0:N0}", sales.Price)</h3>
+                                </div>
+                            <div class="row gy-3">
+                                <p class="card-text col-6"><button onclick="ViewSales('@sales.Id')" href="#" class="btn btn-outline-success btn-sm">Details</button></p>
+                                <p class="card-text col-6"><button onclick="DeleteSales('@sales.Id')" href="#" class="btn btn-outline-danger btn-sm">Delete</button></p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+            }
+        }
+
+    </div>
+</div>
+
+<div class="modal fade" id="viewSalesModal" tabindex="-1" 
+     role="dialog" aria-labelledby="exampleModalCenterTitle" 
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="text-align: center">
+                <h4 class="modal-title" style="text-align: center">
+                    Summary
+                </h4>
+            </div>
+            <div class="modal-body" id="salesSummaryDetails">
+            </div>
+            <div class="modal-footer" style="text-align: center">
+                <button type="button"
+                        class="btn btn-warning"
+                        data-bs-dismiss="modal">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        function ViewSales(value) {
+            $.ajax({
+                url: "./ViewItem",
+                type: "POST",
+                data: { "Identification": value },
+                success: function(data) {
+                    if (data === "0") {
+                        Swal.fire("Error has occurred getting Sales Details");
+                    } else {
+                        $("#salesSummaryDetails").html(data);
+                        $("#viewSalesModal").modal("show");
+                    }
+                }
+            });
+        }
+
+        function DeleteSales(value) {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-danger',
+                    cancelButton: 'btn btn-success'
+                },
+                buttonsStyling: false
+            });
+
+            swalWithBootstrapButtons.fire({
+                title: 'Do you want to Delete this Drug?',
+                "icon": "question",
+                showCancelButton: true,
+                        text: "THIS IS PERMANENT AND CANNOT BE UNDONE!",
+                confirmButtonText: 'Delete',
+                cancelButtonText: 'Cancel',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "./DeleteDrug",
+                        type: "POST",
+                        data: { "Identification": value },
+                        success: function(data) {
+                            if (data === "0") {
+                                Swal.fire({
+                                    "icon": "error",
+                                    "title": "Drug cannot be found"
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            } else if (data === "1") {
+                                Swal.fire({
+                                    "icon": "success",
+                                    "title": "Drug deleted successfully"
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire({
+                                    "icon": "error",
+                                    "title": "Error encountered while deleting drug!"
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            }
+                        }
+
+                    });
+                }
+            });
+        }
+    </script>
+}

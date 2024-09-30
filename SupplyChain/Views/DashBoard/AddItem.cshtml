@@ -1,0 +1,137 @@
+﻿
+@{
+    ViewData["Title"] = "Add Item";
+}
+
+@{
+    Layout = "_LayoutDashBoard";
+}
+
+
+<main id="main" class="main">
+
+   
+    <section class="section">
+            
+        <div class="container">
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Add Item</h5>
+
+        <!-- Floating Labels Form -->
+        @if(ViewBag.ErrorMessage != null){
+                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                           @ViewBag.ErrorMessage
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+        }
+                    <form asp-action="AddItem" asp-controller="DashBoard" class="row g-3 needs-validation" novalidate enctype="multipart/form-data">
+            <div class="col-md-12">
+                <div class="form-floating">
+                                <input type="text" class="form-control" id="CompanyName" name="CompanyName" placeholder="Item's Company Name" required/>
+                                <label for="CompanyName">Item's Main Name</label>
+                </div>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+            </div>
+            <div class="col-md-12">
+                <div class="form-floating">
+                                <input type="text" class="form-control" id="ItemName" name="ItemName" placeholder="Item Name" required>
+                                <label for="ItemName">Item (sub) Name </label>
+                </div>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+            </div>
+            <div class="col-md-12">
+                <div class="form-floating">
+                                <textarea class="form-control" id="floatingPassword" name="About" placeholder="About Item" required style="height: 100px;"></textarea>
+                                <label for="floatingPassword">About</label>
+                </div>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+            </div> 
+            <div class="col-md-6">
+                <div class="form-floating">
+                                <textarea class="form-control" id="Note" name="Note" placeholder="Extra Commision" style="height: 100px;" required></textarea>
+                                <label for="Note">Commision</label>
+                </div>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+            </div>
+            <div class="col-md-6">
+                                <label for="floatingTextarea">Image</label>
+                            <input type="file" class="form-control" id="files" name="files" placeholder="Item Image" required>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+            </div>
+            <div class="col-md-6">
+                <label for="price">Price</label>
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text">&#8358;</span>
+                                        <input type="number" class="form-control" id="price" required placeholder="Price" name="Price" aria-label="Amount (to the nearest naira)">
+                                        <span class="input-group-text">.00</span>
+                                    </div>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                   
+            </div> 
+            <div class="col-md-6">
+                <label for="price">Quantity</label>
+                                    <div class="input-group mb-3">
+                                <input type="number" class="form-control" id="Quantity" required placeholder="Quantity" name="Quantity" aria-label="Quantity">
+                                    
+                                    </div>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                   
+            </div><div class="col-md-6">
+                <label for="price">Unit</label>
+                                    <div class="input-group mb-3">
+                                <select id="Unit" name="unit"
+                                        class="form-select">
+                                    <option value="KG">KG</option>
+                                    <option value="MUDU">Mudu</option>
+                                    <option value="Bag">Bag</option>
+                                    <option value="Pcs">Pcs</option>
+                                    <option value="HalfBag">1/2 Bag</option>
+                                       
+                                </select>
+                                    </div>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                   
+            </div><div class="col-md-6">
+                            <label for="Category">Category</label>
+                                    <div class="input-group mb-3">
+                                <select id="Category" name="Category"
+                                        class="form-select">
+                                    <option value="Grains">Grains</option>
+                                    <option value="Tubers">Tubers</option>
+                                    <option value="Fruits">Fruits</option>
+                                    <option value="Vegetables">Vegetables</option>
+                                       
+                                </select>
+                                    </div>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                   
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary btn-lg">Add Item</button>
+            </div>
+        </form><!-- End floating Labels Form -->
+
+    </div>
+</div>
+</div>
+</section>
+</main>

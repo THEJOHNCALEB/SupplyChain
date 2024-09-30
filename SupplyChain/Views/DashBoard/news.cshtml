@@ -1,0 +1,413 @@
+﻿@{
+    ViewData["Title"] = "Medical News";
+}
+
+@{
+    Layout = "_Layout";
+}
+
+
+
+
+<main id="main" class="main mt-5 pt-2">
+     
+
+    <section class="breadcrumbs">
+        <div class="container">
+
+            <ol>
+                <li><a class=" underline" asp-action="Index" asp-asp-controller="Dashboard">Home</a></li>
+                <li>Blog</li>
+            </ol>
+            <h2>Blog</h2>
+
+        </div>
+    </section><!-- End Breadcrumbs -->
+    <!-- ======= Blog Section ======= -->
+    <section id="blog" class="blog">
+        <div class="container" data-aos="fade-up">
+
+            <div class="row">
+
+                <div class="col-lg-8 entries" >
+
+                    <div id="news"></div>
+                 
+                    <div class="blog-pagination">
+                        <ul class="justify-content-center">
+                            <li class="active"><a href="#">1</a></li>
+                            <li><a href="#">2</a></li>
+                            <li><a href="#">3</a></li>
+                        </ul>
+                    </div>
+
+                </div><!-- End blog entries list -->
+
+                <div class="col-lg-4">
+
+                    <div class="sidebar">
+
+                        <h3 class="sidebar-title">Search</h3>
+                        <div class="sidebar-item search-form">
+                            <form action="">
+                                <input type="text">
+                                <button type="submit"><i class="bi bi-search"></i></button>
+                            </form>
+                        </div><!-- End sidebar search formn-->
+
+                        <h3 class="sidebar-title">Categories</h3>
+                        <div class="sidebar-item categories">
+                            <ul>
+                                <li><a href="#">Grains <span>(25)</span></a></li>
+                                <li><a href="#">Lifestyle <span>(12)</span></a></li>
+                                <li><a href="#">Farm <span>(5)</span></a></li>
+                                <li><a href="#">Flu <span>(22)</span></a></li>
+                                <li><a href="#">Cereals <span>(8)</span></a></li>
+                                <li><a href="#">Welbeing <span>(14)</span></a></li>
+                            </ul>
+                        </div><!-- End sidebar categories-->
+
+                        <h3 class="sidebar-title">Recent Posts</h3>
+                        <div class="sidebar-item recent-posts" id="newNews">
+                         
+
+                          
+                        </div><!-- End sidebar recent posts-->
+
+                        <h3 class="sidebar-title">Tags</h3>
+                        <div class="sidebar-item tags">
+                            <ul>
+                                <li><a>Farm</a></li>
+                                <li><a >IT</a></li>
+                                <li><a >Drugs</a></li>
+                                <li><a>Grains</a></li>
+                                <li><a  >Cereals</a></li>
+                                <li><a >Agric</a></li>
+                                <li><a>Fruits</a></li>
+                                <li><a>Cold</a></li>
+                                <li><a>Flu</a></li>
+                            </ul>
+                        </div><!-- End sidebar tags-->
+
+                    </div><!-- End sidebar -->
+
+                </div><!-- End blog sidebar -->
+
+            </div>
+
+        </div>
+    </section><!-- End Blog Section -->
+
+
+  </main><!-- End #main -->
+
+
+                    @section Scripts {
+
+                        <script>
+        $(document).ready(function () {
+            $("#calculateBtn").click(function () {
+                calculateCalories();
+            });
+        }); 
+
+
+        function calculateCalories() {
+           
+            var gender = $("#gender").val();
+            var age = parseInt($("#age").val());
+            var weight = parseInt($("#weight").val());
+            var height = parseInt($("#height").val());
+            var activityLevel = $("#activity").val();
+          
+
+            var bmr;
+            if (gender === "male") {
+                bmr = 88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age);
+            } else if (gender === "female") {
+                bmr = 447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age);
+            }
+
+            var activityFactors = {
+                sedentary: 1.2,
+                lightlyActive: 1.375,
+                moderatelyActive: 1.55,
+                veryActive: 1.725,
+                extraActive: 1.9
+            };
+
+            var maintenanceCalories = bmr * activityFactors[activityLevel];
+
+            // Calculate calorie ranges for weight goals
+            var loseWeightCalories = [Math.floor((maintenanceCalories - 400) * 10000) / 10000, Math.floor((maintenanceCalories - 100) * 10000) / 10000];
+            var maintainWeightCalories = [Math.floor((maintenanceCalories - 200) * 10000) / 10000, Math.floor((maintenanceCalories + 200) * 10000) / 10000];
+            var gainWeightCalories = [Math.floor((maintenanceCalories + 100) * 10000) / 10000, Math.floor((maintenanceCalories + 400) * 10000) / 10000];
+
+
+            // Construct the result HTML
+            var resultHTML = `
+                                 <div class="row">
+            <div class="col-lg-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <i class="fas fa-minus fa-3x mb-3 text-danger"></i>
+                        <h5 class="card-title fw-bold">Lose Weight</h5>
+                        <p class="card-text">${loseWeightCalories[0]} - ${loseWeightCalories[1]} calorie intake/day</p>
+                        <p class="card-text">0.5-1kg/week rate</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <i class="fas fa-equals fa-3x mb-3 text-primary"></i>
+                        <h5 class="card-title fw-bold">Maintain Weight</h5>
+                        <p class="card-text">${maintainWeightCalories[0]} - ${maintainWeightCalories[1]} calorie intake/day</p>
+                        <p class="card-text">- rate</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <i class="fas fa-plus fa-3x mb-3 text-success"></i>
+                        <h5 class="card-title fw-bold">Gain Weight</h5>
+                        <p class="card-text">${gainWeightCalories[0]} - ${gainWeightCalories[1]} calorie intake/day</p>
+                        <p class="card-text">0.5-1kg/week rate</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+            `;
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "Your result is ready",
+                showConfirmButton: false,
+                timer: 1000
+            });
+            // Update the modal body with the result HTML
+            $("#result").html(resultHTML);
+
+            // Show the modal
+            $("#viewResultModal").modal("show");
+        }
+        
+
+        // function updatePolarAreaChart(calories) {
+        //     var days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+        //     // Generate random data for demonstration purposes
+        //     var data = [];
+        //     for (var i = 0; i < 3; i++) { // Assuming you want 3 categories
+        //         var categoryData = [];
+        //         for (var j = 0; j < days.length; j++) {
+        //             // Generate random values between 50% to 150% of maintenance calories
+        //             categoryData.push(Math.floor(Math.random() * (1.5 * calories - 0.5 * calories + 1)) + 0.5 * calories);
+        //         }
+        //         data.push(categoryData);
+        //     }
+
+        //     var names = ['A', 'B', 'C']; // Sample category names, you can adjust as needed
+
+        //     var series = [];
+        //     for (var i = 0; i < data.length; i++) {
+        //         series.push({
+        //             type: 'bar',
+        //             data: data[i],
+        //             coordinateSystem: 'polar',
+        //             name: names[i],
+        //             stack: 'a',
+        //             emphasis: {
+        //                 focus: 'series'
+        //             }
+        //         });
+        //     }
+
+        //     var chart = echarts.init(document.querySelector("#polarAreaChart"));
+        //     var option = {
+        //         angleAxis: {
+        //             type: 'category',
+        //             data: days
+        //         },
+        //         radiusAxis: {},
+        //         polar: {},
+        //         series: series,
+        //         legend: {
+        //             show: true,
+        //             data: names
+        //         }
+        //     };
+        //     chart.setOption(option);
+        // }
+
+
+        // function updatePolarAreaChart(calories) {
+        //     var days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+        //     var Ndata = [];
+        //     for (var i = 0; i < days.length; i++) {
+        //         Ndata.push(calories); // Using same value for all days, you can adjust this as needed
+        //     }
+
+        //     document.addEventListener("DOMContentLoaded", () => {
+        //         echarts.init(document.querySelector("#polarAreaChart")).setOption({
+        //             angleAxis: {
+        //                 type: 'category',
+        //                 data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        //             },
+        //             radiusAxis: {},
+        //             polar: {},
+        //             series: [{
+        //                 type: 'bar',
+        //                 data: [1, 2, 3, 4, 3, 5, 1],
+        //                 coordinateSystem: 'polar',
+        //                 name: 'A',
+        //                 stack: 'a',
+        //                 emphasis: {
+        //                     focus: 'series'
+        //                 }
+        //             },
+        //             {
+        //                 type: 'bar',
+        //                 data: [2, 4, 6, 1, 3, 2, 1],
+        //                 coordinateSystem: 'polar',
+        //                 name: 'B',
+        //                 stack: 'a',
+        //                 emphasis: {
+        //                     focus: 'series'
+        //                 }
+        //             },
+        //             {
+        //                 type: 'bar',
+        //                 data: [1, 2, 3, 4, 1, 2, 5],
+        //                 coordinateSystem: 'polar',
+        //                 name: 'C',
+        //                 stack: 'a',
+        //                 emphasis: {
+        //                     focus: 'series'
+        //                 }
+        //             }
+        //             ],
+        //             legend: {
+        //                 show: true,
+        //                 data: ['A', 'B', 'C']
+        //             }
+        //         });
+        //     });
+        //     $("#viewResultModal").modal("show");
+        // }
+        // Function to fetch news articles
+        function fetchNews() {
+            const url = `https://newsapi.org/v2/top-headlines?category=farm&language=en&sortBy=popularity&apiKey=b314646dd6a6413fb6429d54e93f24d5`;
+
+            $.ajax({
+                url: url,
+                method: 'GET',
+                dataType: 'json',
+                success: function (response) {
+                    displayNews(response.articles.slice(0, 5)); // Display only the first 10 articles
+                },
+                error: function (error) {
+                    console.log('Error fetching news:', error);
+                }
+            });
+        }
+
+        // Function to display news articles
+        function displayNews(articles) {
+            const newsContainer = $('#news');
+            const newContainer = $('#newNews');
+
+            articles.forEach(article => {
+                const postItem = `
+        <article class="entry">
+            <div class="entry-img">
+                        <img src="${article.urlToImage}" alt="${article.title}" class="img-fluid">
+            </div>
+            <h2 class="entry-title">
+                <a href="${article.url}">${article.title}</a>
+            </h2>
+            <div class="entry-meta">
+                <ul>
+                    <li class="d-flex align-items-center"><i class="bi bi-person"></i> <a href="${article.url}">${article.author}</a></li>
+                </ul>
+            </div>
+            <div class="entry-content">
+                <p>${article.description}</p>
+                <div class="read-more">
+                    <a href="${article.url}">Read More</a>
+                </div>
+            </div>
+        </article>
+        `;
+                const postNewItem = `
+                                          <div class="post-item clearfix">
+                                                    <img src="${article.urlToImage}" alt="${article.title}">
+                                            <h4><a href="${article.url}">${article.title}</a></h4>
+                                            <time datetime="${new Date(article.publishedAt).toISOString().split('T')[0]}">${new Date(article.publishedAt).toDateString()}</time>
+                                        </div>
+                                `;
+
+                newsContainer.append(postItem);
+                newContainer.append(postNewItem);
+            });
+                
+        }
+
+        // Fetch news when the page loads
+        $(document).ready(fetchNews);
+    </script>
+                    }
+
+        <style>
+    .btnn {
+        border: 2px solid hsl(179, 100%, 13%);
+        background: transparent;
+        color: hsl(179, 100%, 13%) !important;
+        width: 190px;
+        padding: 9px;
+        border-radius: 25px;
+        font-weight: 400;
+        font-size: 1.2em;
+    }
+
+
+    .one {
+        padding: 35px;
+        background: hsl(0, 0%, 95%);
+        border-top-left-radius: 15px;
+        border-bottom-left-radius: 15px;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+    }
+
+    .two {
+        padding: 35px;
+        background: hsl(0, 0%, 95%);
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+    }
+
+    .three {
+        padding: 35px;
+        background: hsl(0, 0%, 95%);
+        border-top-right-radius: 15px;
+        border-bottom-right-radius: 15px;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+    }
+	
+		@@media (max-width: 575px) {
+			.mainn{ flex-direction: column;display: flex; max-width: 900px; margin: 70px auto;  }
+				.one{ padding: 55px; background: hsl(31, 77%, 52%); border-top-left-radius: 15px;border-top-right-radius: 15px;border-bottom-left-radius: 0px; }
+				.two{padding: 55px; background: hsl(184, 100%, 22%);}
+				.three{padding: 55px; background: hsl(179, 100%, 13%); border-bottom-right-radius: 15px;border-bottom-left-radius: 15px;  border-top-right-radius: 0px;}
+				
+		}</style>

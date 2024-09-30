@@ -1,0 +1,251 @@
+﻿@{
+
+    @using SupplyChain.Data;
+    @using SupplyChain.Models;
+    @using SupplyChain.Processor;
+
+    @using System.Security.Claims;
+    @inject ApplicationDbContext _userDataAccess;
+    @inject ItemsDbContext _drugDataAccess;
+
+    var email = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+    var user = _userDataAccess.QueryOne(c => c.Email == email);
+    var allItems = _drugDataAccess.QueryMany(c => c.Id != Guid.Empty);
+   
+
+}
+
+@{
+    ViewData["Title"] = "All Items";
+}
+
+@{
+    Layout = "_LayoutDashboard";
+}
+
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Items</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Dashboard">Dashboard</a></li>
+                <li class="breadcrumb-item active">All items</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+        <div class="row gy-4 justify-content-center m-2 p-2">
+            @if (allItems is not { Count: > 0 })
+            {
+                <div class="col-12 text-center">
+                    <h3>Sorry, No item is Available Yet</h3>
+                </div>
+            }
+            else
+            {
+                foreach (var drug in allItems)
+                {
+                    <div class="row justify-content-center m-2 p-2" style="border-radius: 12px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);">
+                        <div class="col-4">
+                            <!-- Image column -->
+                            <div class="image-container">
+                                <img src="~/ItemImages/@drug.Image" class="img-fluid rounded-start" alt="@drug.CompanyName" style="width: 100%; height: 100%; object-fit: cover;">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <!-- Other elements column -->
+                            <div class="row">
+                                <div class="col-12">
+                                    <h5 class="card-title">@Functions.ToSentenceCase(@drug.CompanyName) @Functions.ToSentenceCase(@drug.ItemName)</h5>
+                                    <small class="card-text text-secondary">@drug.About - @drug.Note</small>
+                                </div>
+                            </div>
+                            <div class="row gy-2 align-items-center mt-3">
+                                <div class="col-md-7">
+                                    <h3 class="card-text font-weight-light text-warning">&#8358;@string.Format("{0:N0}", drug.Price)</h3>
+                                </div>
+                                @{
+                                    var userRole = _userDataAccess.QueryOne(c => c.Id == drug.LastChecked);
+                                }
+                                @if(userRole.UserRoleString == "FARMER")
+                                {
+                                    @if (user.UserRoleString == "DISTRIBUTOR")
+                                    {
+                                          @if (user.Id == drug.LastChecked)
+                                    {
+                                        <div class="col-md-5">
+                                            <p class="card-text"><a style="cursor: pointer" class="btn btn-primary btn-md">You Have Picked Item</a></p>
+                                        </div>
+                                    }else{
+                                        <div class="col-md-5">
+                                            <p class="card-text"><a style="cursor: pointer" onclick="addToPick('@drug.Id')" class="btn btn-outline-primary btn-md">Pick Item</a></p>
+                                        </div>
+                                    }
+                                    }
+
+                                }@if (userRole.UserRoleString == "DISTRIBUTOR")
+                                {
+                                    @if (user.UserRoleString == "RETAILER")
+                                    {
+                                        @if (user.Id == drug.LastChecked)
+                                        {
+                                            <div class="col-md-5">
+                                                <p class="card-text"><a style="cursor: pointer" class="btn btn-primary btn-md">You Have Picked Item</a></p>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="col-md-5">
+                                                <p class="card-text"><a style="cursor: pointer" onclick="addToPick('@drug.Id')" class="btn btn-outline-primary btn-md">Pick Item</a></p>
+                                            </div>
+                                        }
+                                    }
+                                }
+
+                                @if (user.UserRoleString == "CUSTOMER")
+                                {
+                                    @if (userRole.UserRoleString == "RETAILER")
+                                    {
+                                               
+                                        @if (user.Id == drug.LastChecked)
+                                        {
+                                            <div class="col-md-5">
+                                                <p class="card-text"><a style="cursor: pointer" class="btn btn-success btn-md">Item Added</a></p>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="col-md-5">
+                                                <p class="card-text"><a style="cursor: pointer" onclick="addToCart('@drug.Id')" class="btn btn-outline-success btn-md">Add to Cart</a></p>
+                                            </div>
+                                        }
+                                    }
+                                }
+                                <small class="card-text text-secondary">ITEM IS WITH - <strong>@userRole.UserRoleString</strong></small>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+
+                    @*  <div class="col-lg-4 mb-3">
+            <div class="card">
+            <div class="row gy-3">
+            <div>
+            <div class="grid justify-content-center pt-3" style="max-height: 50px auto; max-width: 100px; overflow: hidden;">
+            <img src="~/DrugImages/@drug.Image" class="img-fluid rounded-start" alt="@drug.CompanyName" style="width: 100%; height: auto;">
+            </div>
+            </div>
+
+            <div class="col-md-12">
+            <div class="card-body">
+            <h5 class="card-title">@Functions.ToSentenceCase(@drug.CompanyName) @Functions.ToSentenceCase(@drug.DrugName)</h5>
+            <small class="card-text text-secondary">@drug.About - @drug.Note</small>
+            <div class="row gy-0">
+            <h3 class="card-text font-weight-light col-7 text-warning">&#8358;@string.Format("{0:N0}", drug.Price)</h3>
+            <p class="card-text col-5"><a href="#" onclick="addToCart('@drug.Id')" class="btn btn-outline-success btn-sm">Add to Cart</a></p>
+            </div>
+            </div>
+            </div>
+            </div>
+            </div>
+
+            </div> *@
+
+                }
+            }
+
+
+        </div>
+    </section>
+
+</main>
+
+
+
+
+
+@section Scripts {
+    <script>
+        function addToCart(value) {
+            $.ajax({
+                url: "./AddtoCart",
+                type: "POST",
+                data: { "Identification": value },
+                success: function (data) {
+                    if (data === "1") {
+                        Swal.fire({
+                            position: "bottom-end",
+                            icon: "success",
+                            title: 'Added To Cart Successfully! 🥳',
+                            showConfirmButton: false,
+                            timer: 2500
+                        })
+                        window.location.reload();
+                    } else if (data === "3") {
+                        Swal.fire({
+                            position: "bottom-end",
+                            icon: "info",
+                            title: 'Item Already Exists in Cart!',
+                            showConfirmButton: false,
+                            timer: 2500
+                        })
+                    }
+                    else {
+                        Swal.fire({
+                            position: "bottom-end",
+                            icon: "error",
+                            title: 'An error occurred!',
+                            showConfirmButton: false,
+                            timer: 2500
+                        })
+                    }
+                }
+            });
+        }
+
+
+        function addToPick(value) {
+            $.ajax({
+                url: "./AddtoPick",
+                type: "POST",
+                data: { "Identification": value },
+                success: function (data) {
+                    if (data === "1") {
+                        Swal.fire({
+                            position: "bottom-end",
+                            icon: "success",
+                            title: 'Added Successfully! 🥳',
+                            showConfirmButton: false,
+                            timer: 2500
+                        })
+                        window.location.reload();
+                    } else if (data === "3") {
+                        Swal.fire({
+                            position: "bottom-end",
+                            icon: "info",
+                            title: 'Item Already Exists in Cart!',
+                            showConfirmButton: false,
+                            timer: 2500
+                        })
+                    }
+                    else {
+                        Swal.fire({
+                            position: "bottom-end",
+                            icon: "error",
+                            title: 'An error occurred!',
+                            showConfirmButton: false,
+                            timer: 2500
+                        })
+                    }
+                }
+            });
+        }
+                            
+                            </script>
+}
