@@ -38,7 +38,7 @@ builder.Services.AddTransient<CartDbContext>();
 //Add Database Config
 builder.Services.AddSingleton(_ => {
     var settings = MongoClientSettings.FromConnectionString(
-      "mongodb+srv://project:project@cluster0.u3nbcdd.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+      "mongodb+srv://<password>:<username>@cluster0.u3nbcdd.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
       );
     var client = new MongoClient(settings);
     return client.GetDatabase("SupplyChain");
