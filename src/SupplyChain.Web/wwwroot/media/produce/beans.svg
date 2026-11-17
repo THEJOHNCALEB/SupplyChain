@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="Bowl of brown honey beans">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#F8EBDD"/>
+      <stop offset="1" stop-color="#E3BE96"/>
+    </linearGradient>
+    <linearGradient id="bowl" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FDFBF5"/>
+      <stop offset="1" stop-color="#DCD3C2"/>
+    </linearGradient>
+    <radialGradient id="bean" cx=".35" cy=".3" r=".9">
+      <stop offset="0" stop-color="#B9784A"/>
+      <stop offset="1" stop-color="#824324"/>
+    </radialGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#bg)"/>
+  <circle cx="650" cy="110" r="180" fill="#FFF9F1" opacity=".5"/>
+  <circle cx="120" cy="520" r="170" fill="#B8794B" opacity=".14"/>
+  <ellipse cx="400" cy="512" rx="230" ry="36" fill="#7C4B2A" opacity=".18"/>
+  <path d="M232 300h336c-16 132-74 196-168 196s-152-64-168-196Z" fill="url(#bowl)"/>
+  <ellipse cx="400" cy="300" rx="168" ry="46" fill="#B9784A"/>
+  <ellipse cx="400" cy="292" rx="160" ry="42" fill="#8B4C28"/>
+  <g fill="url(#bean)">
+    <ellipse cx="318" cy="286" rx="21" ry="15" transform="rotate(-24 318 286)"/>
+    <ellipse cx="358" cy="274" rx="21" ry="15" transform="rotate(12 358 274)"/>
+    <ellipse cx="400" cy="282" rx="21" ry="15" transform="rotate(-8 400 282)"/>
+    <ellipse cx="442" cy="272" rx="21" ry="15" transform="rotate(22 442 272)"/>
+    <ellipse cx="482" cy="286" rx="21" ry="15" transform="rotate(-16 482 286)"/>
+    <ellipse cx="340" cy="306" rx="21" ry="15" transform="rotate(18 340 306)"/>
+    <ellipse cx="382" cy="308" rx="21" ry="15" transform="rotate(-12 382 308)"/>
+    <ellipse cx="424" cy="306" rx="21" ry="15" transform="rotate(8 424 306)"/>
+    <ellipse cx="466" cy="306" rx="21" ry="15" transform="rotate(-22 466 306)"/>
+  </g>
+  <g fill="#6E3A1D" opacity=".35">
+    <ellipse cx="318" cy="284" rx="7" ry="3" transform="rotate(-24 318 284)"/>
+    <ellipse cx="400" cy="280" rx="7" ry="3" transform="rotate(-8 400 280)"/>
+    <ellipse cx="482" cy="284" rx="7" ry="3" transform="rotate(-16 482 284)"/>
+    <ellipse cx="340" cy="304" rx="7" ry="3" transform="rotate(18 340 304)"/>
+  </g>
+  <g fill="#6E9E4D">
+    <ellipse cx="300" cy="226" rx="30" ry="12" transform="rotate(-28 300 226)"/>
+    <ellipse cx="500" cy="228" rx="30" ry="12" transform="rotate(28 500 228)"/>
+  </g>
+  <g fill="#8B4C28" opacity=".8">
+    <ellipse cx="222" cy="430" rx="18" ry="11" transform="rotate(-24 222 430)"/>
+    <ellipse cx="560" cy="452" rx="16" ry="10" transform="rotate(18 560 452)"/>
+    <ellipse cx="590" cy="420" rx="12" ry="8" transform="rotate(-10 590 420)"/>
+  </g>
+</svg>

@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="Bottle of whole milk">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#E6F1F4"/>
+      <stop offset="1" stop-color="#B7D6DE"/>
+    </linearGradient>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F6FBFD"/>
+      <stop offset="1" stop-color="#CFE3E9"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#bg)"/>
+  <circle cx="650" cy="110" r="185" fill="#FFFFFF" opacity=".45"/>
+  <circle cx="120" cy="520" r="160" fill="#6FA6B4" opacity=".14"/>
+  <ellipse cx="400" cy="512" rx="200" ry="34" fill="#3E6C78" opacity=".16"/>
+  <g>
+    <path d="M356 150h88v54l34 56v212c0 20-16 32-36 32H358c-20 0-36-12-36-32V260l34-56v-54Z" fill="url(#glass)" stroke="#A9C8D1" stroke-width="6"/>
+    <path d="M322 340h156v132c0 20-16 32-36 32H358c-20 0-36-12-36-32V340Z" fill="#FFFDF7"/>
+    <path d="M322 340c40 16 116 16 156 0v22c-40 16-116 16-156 0Z" fill="#EAF3F6"/>
+    <rect x="348" y="118" width="104" height="40" rx="10" fill="#3C7A57"/>
+    <path d="M356 138h88" stroke="#7FB08E" stroke-width="5" opacity=".7"/>
+    <rect x="338" y="376" width="124" height="76" rx="10" fill="#3C7A57"/>
+    <path d="M356 400h88M356 418h62" stroke="#EAF3F6" stroke-width="6" stroke-linecap="round" opacity=".9"/>
+    <path d="M352 232h96" stroke="#FFF" stroke-width="12" opacity=".35" stroke-linecap="round"/>
+  </g>
+  <g fill="#FFF" opacity=".7">
+    <ellipse cx="260" cy="300" rx="26" ry="12" transform="rotate(-30 260 300)"/>
+    <ellipse cx="548" cy="330" rx="18" ry="9" transform="rotate(-20 548 330)"/>
+  </g>
+  <g fill="#8DBE9E" opacity=".8">
+    <ellipse cx="228" cy="230" rx="30" ry="10" transform="rotate(-30 228 230)"/>
+    <ellipse cx="566" cy="220" rx="26" ry="9" transform="rotate(28 566 220)"/>
+  </g>
+</svg>

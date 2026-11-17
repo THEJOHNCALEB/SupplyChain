@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="Sack of Ofada rice">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#F6F1DF"/>
+      <stop offset="1" stop-color="#DCCFA6"/>
+    </linearGradient>
+    <linearGradient id="sack" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#C6A96E"/>
+      <stop offset="1" stop-color="#9C7F49"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#bg)"/>
+  <circle cx="650" cy="120" r="180" fill="#FFFDF5" opacity=".45"/>
+  <circle cx="130" cy="500" r="160" fill="#B7A272" opacity=".18"/>
+  <ellipse cx="400" cy="512" rx="230" ry="36" fill="#7E6736" opacity=".18"/>
+  <path d="M252 250c10-44 68-74 148-74s138 30 148 74c8 34-14 234-30 254-14 18-224 18-238 0-16-20-36-220-28-254Z" fill="url(#sack)"/>
+  <path d="M258 258c24-30 76-48 142-48s118 18 142 48" fill="none" stroke="#E7D6AB" stroke-width="6" opacity=".55"/>
+  <path d="M252 300h296M256 350h288M260 400h280M264 450h272" stroke="#8A6E3C" stroke-width="4" opacity=".28"/>
+  <path d="M300 320c34 26 166 26 200 0" fill="none" stroke="#7F6534" stroke-width="5" opacity=".3"/>
+  <ellipse cx="400" cy="176" rx="86" ry="26" fill="#7E6736" opacity=".22"/>
+  <path d="M314 176c18-20 154-20 172 0-14 18-158 18-172 0Z" fill="#EAD9AE"/>
+  <g fill="#F7F0DA" stroke="#D9CBA2" stroke-width="2">
+    <ellipse cx="286" cy="508" rx="14" ry="7" transform="rotate(-20 286 508)"/>
+    <ellipse cx="318" cy="520" rx="14" ry="7" transform="rotate(8 318 520)"/>
+    <ellipse cx="352" cy="512" rx="14" ry="7" transform="rotate(-8 352 512)"/>
+    <ellipse cx="388" cy="524" rx="14" ry="7" transform="rotate(16 388 524)"/>
+    <ellipse cx="424" cy="512" rx="14" ry="7" transform="rotate(-14 424 512)"/>
+    <ellipse cx="460" cy="522" rx="14" ry="7" transform="rotate(6 460 522)"/>
+    <ellipse cx="496" cy="510" rx="14" ry="7" transform="rotate(-18 496 510)"/>
+    <ellipse cx="530" cy="520" rx="14" ry="7" transform="rotate(12 530 520)"/>
+    <ellipse cx="370" cy="542" rx="14" ry="7" transform="rotate(-6 370 542)"/>
+    <ellipse cx="440" cy="544" rx="14" ry="7" transform="rotate(10 440 544)"/>
+  </g>
+  <path d="M320 120c24-18 56-28 80-28s56 10 80 28" fill="none" stroke="#8D6E3A" stroke-width="6" stroke-linecap="round" opacity=".4"/>
+  <g fill="#6E9E4D">
+    <ellipse cx="300" cy="152" rx="24" ry="10" transform="rotate(-32 300 152)"/>
+    <ellipse cx="500" cy="152" rx="24" ry="10" transform="rotate(32 500 152)"/>
+  </g>
+</svg>

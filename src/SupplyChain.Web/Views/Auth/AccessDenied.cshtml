@@ -1,0 +1,18 @@
+@{
+    ViewData["Title"] = "Access denied";
+}
+
+<div class="text-center">
+    <span class="icon-badge amber" style="margin:0 auto 1.2rem;width:64px;height:64px">
+        <svg class="icon icon-xl" aria-hidden="true"><use href="/media/icons.svg#i-lock"></use></svg>
+    </span>
+    <h1>This area is for a different role.</h1>
+    <p class="lead" style="margin-inline:auto">
+        Your account doesn't have access to that page. If you think this is a mistake, sign in with the right
+        account or contact the marketplace steward.
+    </p>
+    <div class="hero-actions" style="justify-content:center">
+        <a class="btn btn-primary" asp-controller="Dashboard" asp-action="Index">Go to my dashboard</a>
+        <a class="btn btn-outline" asp-controller="Home" asp-action="Contact">Contact support</a>
+    </div>
+</div>

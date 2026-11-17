@@ -1,0 +1,99 @@
+@model OrdersViewModel
+@{
+    ViewData["Title"] = "Orders";
+    var isAdmin = Model.User.Role == UserRole.Admin;
+}
+
+<section class="page-head">
+    <div class="container">
+        <div class="breadcrumb">
+            <a asp-controller="Home" asp-action="Index">Home</a>
+            <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-chevron-right"></use></svg>
+            <span>Orders</span>
+        </div>
+        <div class="row-between wrap">
+            <div>
+                <span class="eyebrow">@(isAdmin ? "Marketplace orders" : "Your orders")</span>
+                <h1>@(isAdmin ? "Everything in motion." : "From farm to your door.")</h1>
+                <p class="lead">
+                    @(isAdmin
+                        ? "All customer orders across the marketplace, with status and value."
+                        : "Track every order, see what's inside and follow it from packing to delivery.")
+                </p>
+            </div>
+            <a class="btn btn-outline" asp-controller="Marketplace" asp-action="Index">
+                <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-basket"></use></svg>
+                Shop again
+            </a>
+        </div>
+    </div>
+</section>
+
+<section class="section-tight">
+    <div class="container">
+        @if (Model.Orders.Count > 0)
+        {
+            <div class="stack">
+                @foreach (var order in Model.Orders)
+                {
+                    <article class="order-card reveal">
+                        <div class="order-card-top">
+                            <div class="row">
+                                <span class="order-ref">@order.Reference</span>
+                                <span class="badge @order.Status.BadgeClass()">@order.Status.ToDisplay()</span>
+                            </div>
+                            <span class="text-sm text-muted">@order.CreatedAt.ToString("dd MMM yyyy, HH:mm")</span>
+                        </div>
+
+                        @if (isAdmin)
+                        {
+                            <div class="text-sm text-muted">
+                                Customer: <strong style="color:var(--ink)">@(order.Customer?.DisplayName ?? "Customer")</strong>
+                                · @order.ShippingCity, @order.ShippingState
+                            </div>
+                        }
+
+                        <div class="order-items">
+                            @foreach (var item in order.Items.Take(4))
+                            {
+                                <img src="@(string.IsNullOrWhiteSpace(item.ImageUrl) ? "/media/produce/yam.svg" : item.ImageUrl)" alt="@item.ProductName" title="@item.ProductName" />
+                            }
+                            @if (order.Items.Count > 4)
+                            {
+                                <span class="more">+@(order.Items.Count - 4)</span>
+                            }
+                            <span class="text-sm text-muted" style="margin-left:.4rem">
+                                @order.Items.Sum(x => x.Quantity) item@(order.Items.Sum(x => x.Quantity) == 1 ? "" : "s")
+                            </span>
+                        </div>
+
+                        <div class="order-card-foot">
+                            <span>
+                                @if (!string.IsNullOrWhiteSpace(order.ShippingName))
+                                {
+                                    <span>Deliver to @order.ShippingName · @order.ShippingCity</span>
+                                }
+                            </span>
+                            <div class="row">
+                                <strong>₦@order.Total.ToString("N0")</strong>
+                                <a class="btn btn-outline btn-sm" asp-controller="Orders" asp-action="Details" asp-route-id="@order.Id">
+                                    View order
+                                    <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-arrow-right"></use></svg>
+                                </a>
+                            </div>
+                        </div>
+                    </article>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="empty-state">
+                <span class="icon-badge"><svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-truck"></use></svg></span>
+                <h3>No orders yet</h3>
+                <p>When you place an order it will appear here with its full status timeline.</p>
+                <a class="btn btn-primary" asp-controller="Marketplace" asp-action="Index">Browse the marketplace</a>
+            </div>
+        }
+    </div>
+</section>

@@ -1,0 +1,105 @@
+@model OrdersViewModel
+@{
+    ViewData["Title"] = "All orders";
+    var delivered = Model.Orders.Count(x => x.Status == OrderStatus.Delivered);
+    var open = Model.Orders.Count(x => x.Status is OrderStatus.Pending or OrderStatus.Paid or OrderStatus.Processing or OrderStatus.Shipped);
+    var revenue = Model.Orders.Where(x => x.Status != OrderStatus.Cancelled).Sum(x => x.Total);
+}
+
+<div class="dash-head">
+    <div>
+        <span class="eyebrow">Marketplace orders</span>
+        <h2>Everything in motion.</h2>
+        <p>Every customer order across the chain, newest first.</p>
+    </div>
+    <div class="dash-actions">
+        <a class="btn btn-outline btn-sm" asp-controller="Admin" asp-action="Users">
+            <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-users"></use></svg>
+            People
+        </a>
+        <a class="btn btn-primary btn-sm" asp-controller="Marketplace" asp-action="Index">
+            <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-basket"></use></svg>
+            Marketplace
+        </a>
+    </div>
+</div>
+
+<div class="stat-grid cols-3">
+    <div class="stat-card">
+        <div class="stat-top"><span class="stat-label">Orders</span><span class="icon-badge"><svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-layers"></use></svg></span></div>
+        <div class="stat-value" data-count="@Model.Orders.Count">@Model.Orders.Count</div>
+        <div class="stat-foot">Across the whole marketplace</div>
+    </div>
+    <div class="stat-card amber">
+        <div class="stat-top"><span class="stat-label">In motion</span><span class="icon-badge amber"><svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-truck"></use></svg></span></div>
+        <div class="stat-value" data-count="@open">@open</div>
+        <div class="stat-foot">@delivered delivered</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-top"><span class="stat-label">Order value</span><span class="icon-badge"><svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-wallet"></use></svg></span></div>
+        <div class="stat-value">₦@revenue.ToString("N0")</div>
+        <div class="stat-foot">Excluding cancelled orders</div>
+    </div>
+</div>
+
+<div class="panel">
+    <div class="panel-head">
+        <h4>Order ledger</h4>
+        <span class="badge badge-forest">@Model.Orders.Count record@(Model.Orders.Count == 1 ? "" : "s")</span>
+    </div>
+    <div class="panel-body flush">
+        @if (Model.Orders.Count > 0)
+        {
+            <div class="table-wrap">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Order</th>
+                            <th>Customer</th>
+                            <th>Items</th>
+                            <th>Total</th>
+                            <th>Payment</th>
+                            <th>Status</th>
+                            <th>Placed</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var order in Model.Orders)
+                        {
+                            <tr>
+                                <td><strong>@order.Reference</strong></td>
+                                <td>
+                                    @(order.Customer?.DisplayName ?? order.ShippingName)
+                                    <div class="text-xs text-muted">@order.ShippingCity, @order.ShippingState</div>
+                                </td>
+                                <td>
+                                    @order.Items.Count line@(order.Items.Count == 1 ? "" : "s")
+                                    <div class="text-xs text-muted">@order.Items.Sum(x => x.Quantity) units</div>
+                                </td>
+                                <td class="mono">₦@order.Total.ToString("N0")</td>
+                                <td class="text-sm">@order.PaymentMethod</td>
+                                <td><span class="badge @order.Status.BadgeClass()">@order.Status.ToDisplay()</span></td>
+                                <td class="text-xs text-muted">@order.CreatedAt.ToString("dd MMM yyyy")</td>
+                                <td class="table-actions">
+                                    <a class="btn-icon" asp-controller="Orders" asp-action="Details" asp-route-id="@order.Id" aria-label="View @order.Reference">
+                                        <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-eye"></use></svg>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="empty-state" style="border:0;padding:3rem 1rem">
+                <span class="icon-badge"><svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-layers"></use></svg></span>
+                <h3>No orders yet</h3>
+                <p>Orders will appear here as customers shop the marketplace.</p>
+                <a class="btn btn-primary" asp-controller="Marketplace" asp-action="Index">View marketplace</a>
+            </div>
+        }
+    </div>
+</div>

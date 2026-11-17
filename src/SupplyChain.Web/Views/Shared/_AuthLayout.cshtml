@@ -1,0 +1,67 @@
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
+@{
+    var title = ViewData["Title"] as string ?? "Welcome";
+}
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@title · SupplyChain</title>
+    <meta name="theme-color" content="#20553a" />
+    <meta name="csrf-token" content="@Antiforgery.GetAndStoreTokens(Context).RequestToken" />
+    <link rel="icon" href="~/favicon.ico" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/app.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="auth-shell">
+        <aside class="auth-visual">
+            <a class="brand" asp-controller="Home" asp-action="Index">
+                <span class="brand-mark">
+                    <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-sprout"></use></svg>
+                </span>
+                <span class="brand-text">SupplyChain<small>farm to doorstep</small></span>
+            </a>
+
+            <figure class="auth-quote">
+                <blockquote>
+                    “The yam leaves Amina’s farm in Benue and reaches a Lagos kitchen in <em>two days</em> — and every hand it passed through is on record.”
+                </blockquote>
+                <figcaption>
+                    <span class="avatar-fallback" style="background:rgba(251,246,237,.16);color:#f7f1e6">AO</span>
+                    Ada Obi, platform steward
+                </figcaption>
+            </figure>
+
+            <div class="auth-stats">
+                <div><strong>12</strong><span>produce lots</span></div>
+                <div><strong>8</strong><span>demo accounts</span></div>
+                <div><strong>100%</strong><span>traceable</span></div>
+            </div>
+        </aside>
+
+        <section class="auth-form-side">
+            <div class="auth-card">
+                <div class="row-between mb-3">
+                    <a class="link-arrow" asp-controller="Home" asp-action="Index">
+                        <svg class="icon" aria-hidden="true" style="transform:rotate(180deg)"><use href="/media/icons.svg#i-arrow-right"></use></svg>
+                        Back to market
+                    </a>
+                    <button class="btn-icon plain" type="button" data-theme-toggle aria-label="Switch colour mode">
+                        <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-moon"></use></svg>
+                    </button>
+                </div>
+
+                @await Html.PartialAsync("_Toasts")
+                @RenderBody()
+            </div>
+        </section>
+    </div>
+
+    <script src="~/js/app.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

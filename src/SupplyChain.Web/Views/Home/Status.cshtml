@@ -1,0 +1,20 @@
+@model ErrorViewModel
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<section class="section">
+    <div class="container container-narrow text-center">
+        <span class="eyebrow" style="justify-content:center">Error @Model.StatusCode</span>
+        <h1>@Model.Title</h1>
+        <p class="lead" style="margin-inline:auto">@Model.Message</p>
+        @if (Model.ShowRequestId)
+        {
+            <p class="text-xs text-muted">Request ID: <code>@Model.RequestId</code></p>
+        }
+        <div class="hero-actions" style="justify-content:center">
+            <a class="btn btn-primary" asp-controller="Home" asp-action="Index">Back to home</a>
+            <a class="btn btn-outline" asp-controller="Marketplace" asp-action="Index">Browse the marketplace</a>
+        </div>
+    </div>
+</section>

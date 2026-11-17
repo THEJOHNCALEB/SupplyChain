@@ -1,0 +1,196 @@
+@model ProfilePageViewModel
+@{
+    ViewData["Title"] = "Profile settings";
+    var user = Model.User;
+    var passwordTabActive = ViewData.ModelState.Keys.Any(key => key.StartsWith("Password.", StringComparison.Ordinal));
+}
+
+<div class="dash-head">
+    <div>
+        <span class="eyebrow">Account</span>
+        <h2>Make it yours.</h2>
+        <p>Keep your contact details, storefront and security up to date.</p>
+    </div>
+    <div class="dash-actions">
+        <a class="btn btn-outline btn-sm" asp-controller="Dashboard" asp-action="Index">
+            <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-grid"></use></svg>
+            Dashboard
+        </a>
+    </div>
+</div>
+
+<div class="profile-grid">
+    <div class="dash-stack">
+        <div class="panel profile-card">
+            @if (!string.IsNullOrWhiteSpace(user.AvatarUrl))
+            {
+                <img class="avatar avatar-xl" src="@user.AvatarUrl" alt="@user.DisplayName" />
+            }
+            else
+            {
+                <span class="avatar-fallback avatar-xl" style="font-size:1.6rem">@user.Initials</span>
+            }
+            <h3>@user.DisplayName</h3>
+            <div class="role">@user.Role.ToDisplay()@(string.IsNullOrWhiteSpace(user.StoreName) ? "" : $" · {user.StoreName}")</div>
+            @if (user.IsVerified)
+            {
+                <span class="badge badge-success"><svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-check"></use></svg> Verified account</span>
+            }
+            else
+            {
+                <span class="badge badge-warn">Verification pending</span>
+            }
+
+            <div class="profile-stats">
+                <div><strong>@user.CreatedAt.ToString("MMM")</strong><span>Joined</span></div>
+                <div><strong>@user.CreatedAt.Year</strong><span>Year</span></div>
+                <div><strong>@(user.IsActive ? "Live" : "Off")</strong><span>Status</span></div>
+            </div>
+
+            <form method="post" asp-controller="Profile" asp-action="Avatar" enctype="multipart/form-data" class="mt-3">
+                @Html.AntiForgeryToken()
+                <div class="field mb-2">
+                    <label class="label" for="avatar">Change photo</label>
+                    <input class="input" id="avatar" name="file" type="file" accept="image/*" />
+                </div>
+                <button class="btn btn-outline btn-block btn-sm" type="submit">
+                    <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-upload"></use></svg>
+                    Upload photo
+                </button>
+            </form>
+        </div>
+
+        <div class="panel card-pad">
+            <h4>Contact</h4>
+            <dl class="detail-list">
+                <div><dt>Email</dt><dd>@user.Email</dd></div>
+                <div><dt>Username</dt><dd>@user.Username</dd></div>
+                <div><dt>Phone</dt><dd>@(string.IsNullOrWhiteSpace(user.PhoneNumber) ? "Not set" : user.PhoneNumber)</dd></div>
+                <div><dt>Location</dt><dd>@(string.IsNullOrWhiteSpace(user.City) && string.IsNullOrWhiteSpace(user.State) ? "Not set" : $"{user.City}, {user.State}".Trim(',', ' '))</dd></div>
+            </dl>
+        </div>
+    </div>
+
+    <div class="panel card-pad">
+        <div class="settings-tabs" role="tablist">
+            <button class="settings-tab @(passwordTabActive ? null : "is-active")" type="button" data-tab="profile" role="tab">Profile</button>
+            <button class="settings-tab @(passwordTabActive ? "is-active" : null)" type="button" data-tab="password" role="tab">Password</button>
+        </div>
+
+        <div class="settings-panel @(passwordTabActive ? null : "is-active")" data-panel="profile" role="tabpanel">
+            <h3 style="font-size:1.2rem">Public profile</h3>
+            <p class="text-sm text-muted mb-3">This is what buyers and sellers see on your listings and orders.</p>
+
+            <form method="post" asp-controller="Profile" asp-action="Update" novalidate>
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="ModelOnly"></div>
+
+                <div class="field-row">
+                    <div class="field">
+                        <label asp-for="Profile.FirstName"></label>
+                        <input class="input" asp-for="Profile.FirstName" autocomplete="given-name" />
+                        <span asp-validation-for="Profile.FirstName" class="validation"></span>
+                    </div>
+                    <div class="field">
+                        <label asp-for="Profile.LastName"></label>
+                        <input class="input" asp-for="Profile.LastName" autocomplete="family-name" />
+                        <span asp-validation-for="Profile.LastName" class="validation"></span>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label asp-for="Profile.PhoneNumber"></label>
+                    <input class="input" asp-for="Profile.PhoneNumber" type="tel" autocomplete="tel" />
+                    <span asp-validation-for="Profile.PhoneNumber" class="validation"></span>
+                </div>
+
+                @if (user.Role is UserRole.Farmer or UserRole.Distributor or UserRole.Retailer or UserRole.Admin)
+                {
+                    <div class="field">
+                        <label asp-for="Profile.StoreName"></label>
+                        <input class="input" asp-for="Profile.StoreName" placeholder="Bello Family Farms" />
+                        <span asp-validation-for="Profile.StoreName" class="validation"></span>
+                    </div>
+                }
+
+                <div class="field">
+                    <label asp-for="Profile.Bio"></label>
+                    <textarea class="textarea" asp-for="Profile.Bio" rows="4" placeholder="Tell buyers what you grow, where, and how."></textarea>
+                    <span asp-validation-for="Profile.Bio" class="validation"></span>
+                </div>
+
+                <div class="field">
+                    <label asp-for="Profile.Address"></label>
+                    <input class="input" asp-for="Profile.Address" autocomplete="street-address" />
+                    <span asp-validation-for="Profile.Address" class="validation"></span>
+                </div>
+
+                <div class="field-row">
+                    <div class="field">
+                        <label asp-for="Profile.City"></label>
+                        <input class="input" asp-for="Profile.City" autocomplete="address-level2" />
+                        <span asp-validation-for="Profile.City" class="validation"></span>
+                    </div>
+                    <div class="field">
+                        <label asp-for="Profile.State"></label>
+                        <input class="input" asp-for="Profile.State" autocomplete="address-level1" />
+                        <span asp-validation-for="Profile.State" class="validation"></span>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" type="submit">
+                    <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-check"></use></svg>
+                    Save profile
+                </button>
+            </form>
+        </div>
+
+        <div class="settings-panel @(passwordTabActive ? "is-active" : null)" data-panel="password" role="tabpanel">
+            <h3 style="font-size:1.2rem">Password</h3>
+            <p class="text-sm text-muted mb-3">Use at least 8 characters. You'll stay signed in on this device.</p>
+
+            <form method="post" asp-controller="Profile" asp-action="ChangePassword" novalidate>
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="ModelOnly"></div>
+
+                <div class="field">
+                    <label asp-for="Password.CurrentPassword"></label>
+                    <div class="password-wrap">
+                        <input class="input" asp-for="Password.CurrentPassword" type="password" id="current-password" autocomplete="current-password" />
+                        <button class="password-toggle" type="button" data-password-toggle="current-password" aria-label="Show password">
+                            <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-eye"></use></svg>
+                        </button>
+                    </div>
+                    <span asp-validation-for="Password.CurrentPassword" class="validation"></span>
+                </div>
+
+                <div class="field">
+                    <label asp-for="Password.NewPassword"></label>
+                    <div class="password-wrap">
+                        <input class="input" asp-for="Password.NewPassword" type="password" id="new-password" autocomplete="new-password" />
+                        <button class="password-toggle" type="button" data-password-toggle="new-password" aria-label="Show password">
+                            <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-eye"></use></svg>
+                        </button>
+                    </div>
+                    <span asp-validation-for="Password.NewPassword" class="validation"></span>
+                </div>
+
+                <div class="field">
+                    <label asp-for="Password.ConfirmPassword"></label>
+                    <div class="password-wrap">
+                        <input class="input" asp-for="Password.ConfirmPassword" type="password" id="confirm-new-password" autocomplete="new-password" />
+                        <button class="password-toggle" type="button" data-password-toggle="confirm-new-password" aria-label="Show password">
+                            <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-eye"></use></svg>
+                        </button>
+                    </div>
+                    <span asp-validation-for="Password.ConfirmPassword" class="validation"></span>
+                </div>
+
+                <button class="btn btn-primary" type="submit">
+                    <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-lock"></use></svg>
+                    Update password
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

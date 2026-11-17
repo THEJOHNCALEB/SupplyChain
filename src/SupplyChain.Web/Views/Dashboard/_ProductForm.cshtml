@@ -1,0 +1,135 @@
+@model ProductFormViewModel
+@{
+    var formAction = ViewData["FormAction"] as string ?? "/dashboard/products/new";
+    var formTitle = ViewData["FormTitle"] as string ?? "New listing";
+    var formIntro = ViewData["FormIntro"] as string;
+    var submitLabel = ViewData["SubmitLabel"] as string ?? "Save";
+    var isEdit = ViewData["IsEdit"] as bool? ?? false;
+    var units = new[] { "kg", "piece", "crate", "litre", "bunch", "jar", "bag" };
+}
+
+<div class="dash-head">
+    <div>
+        <span class="eyebrow">@(isEdit ? "Update produce" : "Sell produce")</span>
+        <h2>@formTitle</h2>
+        @if (!string.IsNullOrWhiteSpace(formIntro))
+        {
+            <p>@formIntro</p>
+        }
+    </div>
+    <div class="dash-actions">
+        <a class="btn btn-outline btn-sm" asp-controller="Dashboard" asp-action="Products">
+            <svg class="icon" aria-hidden="true" style="transform:rotate(180deg)"><use href="/media/icons.svg#i-arrow-right"></use></svg>
+            Back to inventory
+        </a>
+    </div>
+</div>
+
+<form method="post" action="@formAction" enctype="multipart/form-data" class="dash-grid" novalidate>
+    @Html.AntiForgeryToken()
+    <div class="panel card-pad">
+        <div asp-validation-summary="ModelOnly"></div>
+
+        <div class="field">
+            <label asp-for="Name"></label>
+            <input class="input" asp-for="Name" placeholder="Fresh white yam" />
+            <span asp-validation-for="Name" class="validation"></span>
+        </div>
+
+        <div class="field-row">
+            <div class="field">
+                <label asp-for="Category"></label>
+                <select class="select" asp-for="Category" asp-items="Html.GetEnumSelectList<ProductCategory>()"></select>
+                <span asp-validation-for="Category" class="validation"></span>
+            </div>
+            <div class="field">
+                <label asp-for="Unit">Unit of sale</label>
+                <select class="select" asp-for="Unit">
+                    @foreach (var unit in units)
+                    {
+                        <option value="@unit" selected="@(Model.Unit == unit)">@unit</option>
+                    }
+                </select>
+                <span asp-validation-for="Unit" class="validation"></span>
+            </div>
+        </div>
+
+        <div class="field">
+            <label asp-for="Description"></label>
+            <textarea class="textarea" asp-for="Description" rows="4" placeholder="Variety, grade, curing, packaging, best use…"></textarea>
+            <span asp-validation-for="Description" class="validation"></span>
+        </div>
+
+        <div class="field-row">
+            <div class="field">
+                <label asp-for="Price">Price (₦ per @Model.Unit)</label>
+                <input class="input" asp-for="Price" type="number" min="1" step="50" placeholder="1800" />
+                <span asp-validation-for="Price" class="validation"></span>
+            </div>
+            <div class="field">
+                <label asp-for="Quantity">Quantity available</label>
+                <input class="input" asp-for="Quantity" type="number" min="1" placeholder="320" />
+                <span asp-validation-for="Quantity" class="validation"></span>
+            </div>
+        </div>
+
+        <div class="field">
+            <label asp-for="Origin">Where was it grown?</label>
+            <input class="input" asp-for="Origin" placeholder="Benue, Nigeria" />
+            <span asp-validation-for="Origin" class="validation"></span>
+        </div>
+
+        <button class="btn btn-primary btn-lg" type="submit">
+            <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-check"></use></svg>
+            @submitLabel
+        </button>
+    </div>
+
+    <div class="dash-stack">
+        <div class="panel card-pad">
+            <h4 style="margin-bottom:.3rem">Photo</h4>
+            <p class="text-sm text-muted">A clear, well-lit photo of the actual produce. JPG, PNG or WebP.</p>
+
+            <div class="soft-card" style="overflow:hidden;margin-bottom:1rem">
+                <img id="image-preview"
+                     src="@(string.IsNullOrWhiteSpace(Model.ExistingImageUrl) ? "/media/produce/yam.svg" : Model.ExistingImageUrl)"
+                     alt="Listing preview" style="width:100%;aspect-ratio:4/3;object-fit:cover" />
+            </div>
+
+            <div class="field mb-0">
+                <label asp-for="Image">@(isEdit ? "Replace photo (optional)" : "Upload photo")</label>
+                <input class="input" asp-for="Image" type="file" accept="image/*" id="image-input" />
+                <span asp-validation-for="Image" class="validation"></span>
+                @if (isEdit)
+                {
+                    <span class="help">Leave empty to keep the current photo.</span>
+                }
+            </div>
+        </div>
+
+        <div class="panel card-pad">
+            <h4 style="margin-bottom:.4rem">Selling tips</h4>
+            <ul class="check-list" style="margin-top:.5rem">
+                <li><svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-check"></use></svg> Name the variety and grade.</li>
+                <li><svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-check"></use></svg> State the packaging and unit clearly.</li>
+                <li><svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-check"></use></svg> Keep stock counts current to avoid cancellations.</li>
+            </ul>
+        </div>
+    </div>
+</form>
+
+<script>
+    (function () {
+        var input = document.getElementById("image-input");
+        var preview = document.getElementById("image-preview");
+        if (!input || !preview) return;
+        input.addEventListener("change", function () {
+            var file = input.files && input.files[0];
+            if (!file) return;
+            if (preview.dataset.url) URL.revokeObjectURL(preview.dataset.url);
+            var url = URL.createObjectURL(file);
+            preview.dataset.url = url;
+            preview.src = url;
+        });
+    })();
+</script>

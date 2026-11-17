@@ -1,0 +1,362 @@
+@model DashboardViewModel
+@{
+    ViewData["Title"] = "Overview";
+    var user = Model.User;
+    var snapshot = Model.Snapshot;
+    var isCustomer = user.Role == UserRole.Customer;
+    var isAdmin = user.Role == UserRole.Admin;
+    var isSeller = user.Role is UserRole.Farmer or UserRole.Distributor or UserRole.Retailer;
+    var greeting = DateTime.Now.Hour < 12 ? "Good morning" : DateTime.Now.Hour < 17 ? "Good afternoon" : "Good evening";
+    var series = snapshot.RevenueSeries;
+    var max = series.Count == 0 ? 1m : Math.Max(1m, series.Max(x => x.Value));
+    var categoryTotal = snapshot.CategoryBreakdown.Sum(x => x.Count);
+}
+
+<div class="dash-head">
+    <div>
+        <span class="eyebrow">@greeting, @user.FirstName</span>
+        <h2>@(isCustomer ? "Your fresh basket" : isAdmin ? "Marketplace pulse" : "Your chain at a glance")</h2>
+        <p>
+            @(isCustomer
+                ? "Track orders, revisit favourites and keep your kitchen stocked."
+                : isAdmin
+                    ? "People, orders and produce moving through the marketplace."
+                    : "Revenue, inventory and hand-offs across your part of the chain.")
+        </p>
+    </div>
+    <div class="dash-actions">
+        @if (isSeller)
+        {
+            <a class="btn btn-outline btn-sm" asp-controller="Dashboard" asp-action="Sales">
+                <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-chart"></use></svg>
+                Sales
+            </a>
+            @if (user.Role == UserRole.Farmer)
+            {
+                <a class="btn btn-primary btn-sm" asp-controller="Dashboard" asp-action="NewProduct">
+                    <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-plus"></use></svg>
+                    New listing
+                </a>
+            }
+        }
+        else if (isCustomer)
+        {
+            <a class="btn btn-primary btn-sm" asp-controller="Marketplace" asp-action="Index">
+                <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-basket"></use></svg>
+                Shop fresh
+            </a>
+        }
+        else
+        {
+            <a class="btn btn-primary btn-sm" asp-controller="Admin" asp-action="Users">
+                <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-users"></use></svg>
+                Manage people
+            </a>
+        }
+    </div>
+</div>
+
+<div class="stat-grid">
+    <div class="stat-card">
+        <div class="stat-top">
+            <span class="stat-label">@(isCustomer ? "Lifetime spend" : "Revenue")</span>
+            <span class="icon-badge"><svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-wallet"></use></svg></span>
+        </div>
+        <div class="stat-value">₦@snapshot.Revenue.ToString("N0")</div>
+        <div class="stat-foot">@(isCustomer ? "Across all your orders" : "From completed hand-offs and sales")</div>
+    </div>
+    <div class="stat-card amber">
+        <div class="stat-top">
+            <span class="stat-label">@(isCustomer ? "Open orders" : "Orders")</span>
+            <span class="icon-badge amber"><svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-truck"></use></svg></span>
+        </div>
+        <div class="stat-value" data-count="@snapshot.Orders">@snapshot.Orders</div>
+        <div class="stat-foot"><span class="up">@snapshot.PendingOrders</span> still in motion</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-top">
+            <span class="stat-label">@(isCustomer ? "Cart value" : isAdmin ? "Active lots" : "Active listings")</span>
+            <span class="icon-badge"><svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-package"></use></svg></span>
+        </div>
+        @if (isCustomer)
+        {
+            <div class="stat-value">₦@snapshot.InventoryValue.ToString("N0")</div>
+            <div class="stat-foot">@snapshot.CartItems item@(snapshot.CartItems == 1 ? "" : "s") waiting in your cart</div>
+        }
+        else
+        {
+            <div class="stat-value" data-count="@snapshot.ActiveProducts">@snapshot.ActiveProducts</div>
+            <div class="stat-foot">₦@snapshot.InventoryValue.ToString("N0") inventory value</div>
+        }
+    </div>
+    <div class="stat-card amber">
+        <div class="stat-top">
+            <span class="stat-label">@(isCustomer ? "Sellers" : isAdmin ? "Partners" : "Buyers")</span>
+            <span class="icon-badge amber"><svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-users"></use></svg></span>
+        </div>
+        <div class="stat-value" data-count="@(isCustomer ? snapshot.Partners : isAdmin ? snapshot.Partners : snapshot.Customers)">
+            @(isCustomer ? snapshot.Partners : isAdmin ? snapshot.Partners : snapshot.Customers)
+        </div>
+        <div class="stat-foot">@(isCustomer ? "Trusted sellers you have bought from" : "People and businesses in your network")</div>
+    </div>
+</div>
+
+<div class="dash-grid">
+    <div class="panel">
+        <div class="panel-head">
+            <h4>@(isCustomer ? "Spending over time" : "Revenue over time")</h4>
+            <span class="badge badge-forest">Last 6 months</span>
+        </div>
+        <div class="chart-wrap">
+            @if (series.Count > 0 && series.Any(x => x.Value > 0))
+            {
+                <div class="chart-bars">
+                    @foreach (var point in series)
+                    {
+                        var height = Math.Max(4, (int)Math.Round(point.Value / max * 100));
+                        <div class="bar" title="@point.Label: ₦@point.Value.ToString("N0")">
+                            <div class="bar-track">
+                                <div class="bar-fill" data-h="@height" style="height:0"></div>
+                            </div>
+                            <span class="bar-label">@point.Label</span>
+                        </div>
+                    }
+                </div>
+                <div class="legend">
+                    <span><i></i> @(isCustomer ? "Spend" : "Sales")</span>
+                    <span><i class="amber"></i> Alternating months</span>
+                </div>
+            }
+            else
+            {
+                <div class="empty-state" style="border:0;background:var(--surface-2);padding:2.2rem 1rem">
+                    <span class="icon-badge"><svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-chart"></use></svg></span>
+                    <h3 style="font-size:1.05rem">No activity yet</h3>
+                    <p style="font-size:.85rem">Your chart will fill up as orders and hand-offs are recorded.</p>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="panel">
+        <div class="panel-head">
+            <h4>@(isCustomer ? "Your basket by category" : "Inventory mix")</h4>
+        </div>
+        <div class="progress-list">
+            @if (snapshot.CategoryBreakdown.Count > 0)
+            {
+                var top = snapshot.CategoryBreakdown.Take(5).ToList();
+                @for (var i = 0; i < top.Count; i++)
+                {
+                    var slice = top[i];
+                    var percent = categoryTotal == 0 ? 0 : (int)Math.Round(slice.Count / (double)categoryTotal * 100);
+                    <div class="progress-item">
+                        <span>@slice.Label <b>@slice.Count</b></span>
+                        <div class="progress-track">
+                            <div class="progress-fill @(i % 2 == 1 ? "amber" : null)" style="width:@percent%"></div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <p class="text-sm text-muted mb-0">Category insights appear once there is some activity.</p>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="dash-grid mt-3">
+    <div class="panel">
+        <div class="panel-head">
+            <h4>@(isSeller ? "Recent hand-offs" : "Recent orders")</h4>
+            <a class="link-arrow" asp-controller="Orders" asp-action="Index">
+                View all
+                <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-arrow-right"></use></svg>
+            </a>
+        </div>
+        <div class="panel-body flush">
+            @if (isSeller && snapshot.RecentTransfers.Count > 0)
+            {
+                <div class="table-wrap">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Buyer</th>
+                                <th>Stage</th>
+                                <th>Value</th>
+                                <th>When</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var transfer in snapshot.RecentTransfers)
+                            {
+                                <tr>
+                                    <td>
+                                        <strong>@(transfer.ToUser?.DisplayName ?? "Buyer")</strong>
+                                        <div class="text-xs text-muted">@transfer.Note</div>
+                                    </td>
+                                    <td><span class="badge badge-forest">@transfer.ToStage.ToDisplay()</span></td>
+                                    <td class="mono">₦@((transfer.UnitPrice * transfer.Quantity).ToString("N0"))</td>
+                                    <td class="text-xs text-muted">@transfer.CreatedAt.ToString("dd MMM")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else if (snapshot.RecentOrders.Count > 0)
+            {
+                <div class="table-wrap">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Order</th>
+                                @if (!isCustomer)
+                                {
+                                    <th>Customer</th>
+                                }
+                                <th>Status</th>
+                                <th>Total</th>
+                                <th>When</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var order in snapshot.RecentOrders)
+                            {
+                                <tr>
+                                    <td>
+                                        <a asp-controller="Orders" asp-action="Details" asp-route-id="@order.Id">
+                                            <strong>@order.Reference</strong>
+                                        </a>
+                                    </td>
+                                    @if (!isCustomer)
+                                    {
+                                        <td>@(order.Customer?.DisplayName ?? "Customer")</td>
+                                    }
+                                    <td><span class="badge @order.Status.BadgeClass()">@order.Status.ToDisplay()</span></td>
+                                    <td class="mono">₦@order.Total.ToString("N0")</td>
+                                    <td class="text-xs text-muted">@order.CreatedAt.ToString("dd MMM")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="empty-state" style="border:0;padding:2.5rem 1rem">
+                    <span class="icon-badge"><svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-clock"></use></svg></span>
+                    <h3 style="font-size:1.05rem">Nothing here yet</h3>
+                    <p style="font-size:.85rem">Activity will show up as you trade on the marketplace.</p>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="dash-stack">
+        @if (isSeller)
+        {
+            <div class="panel">
+                <div class="panel-head">
+                    <h4>Your listings</h4>
+                    <a class="link-arrow" asp-controller="Dashboard" asp-action="Products">Manage</a>
+                </div>
+                <div class="panel-body flush">
+                    @if (Model.Products.Count > 0)
+                    {
+                        <div class="table-wrap">
+                            <table class="data-table">
+                                <tbody>
+                                    @foreach (var product in Model.Products)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <div class="table-product">
+                                                    <img src="@product.ImageUrl" alt="" />
+                                                    <div>
+                                                        <strong>@product.Name</strong>
+                                                        <span>@product.Quantity @product.Unit · ₦@product.Price.ToString("N0")</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="table-actions">
+                                                <a class="btn-icon" asp-controller="Marketplace" asp-action="Details" asp-route-id="@product.Id" aria-label="View @product.Name">
+                                                    <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-eye"></use></svg>
+                                                </a>
+                                                <a class="btn-icon" asp-controller="Dashboard" asp-action="EditProduct" asp-route-id="@product.Id" aria-label="Edit @product.Name">
+                                                    <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-edit"></use></svg>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="empty-state" style="border:0;padding:2rem 1rem">
+                            <p class="text-sm text-muted mb-2">You haven't listed anything yet.</p>
+                            @if (user.Role == UserRole.Farmer)
+                            {
+                                <a class="btn btn-primary btn-sm" asp-controller="Dashboard" asp-action="NewProduct">List your first harvest</a>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+
+        <div class="panel">
+            <div class="panel-head"><h4>Quick actions</h4></div>
+            <div class="quick-actions">
+                <a class="quick-action" asp-controller="Marketplace" asp-action="Index">
+                    <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-basket"></use></svg>
+                    Browse market
+                </a>
+                @if (isSeller)
+                {
+                    <a class="quick-action" asp-controller="Dashboard" asp-action="Products">
+                        <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-package"></use></svg>
+                        Inventory
+                    </a>
+                    <a class="quick-action" asp-controller="Dashboard" asp-action="Sales">
+                        <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-chart"></use></svg>
+                        Sales ledger
+                    </a>
+                }
+                else if (isCustomer)
+                {
+                    <a class="quick-action" asp-controller="Orders" asp-action="Index">
+                        <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-truck"></use></svg>
+                        Track orders
+                    </a>
+                    <a class="quick-action" asp-controller="Cart" asp-action="Index">
+                        <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-cart"></use></svg>
+                        Open cart
+                    </a>
+                }
+                else
+                {
+                    <a class="quick-action" asp-controller="Admin" asp-action="Orders">
+                        <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-layers"></use></svg>
+                        All orders
+                    </a>
+                    <a class="quick-action" asp-controller="Admin" asp-action="Users">
+                        <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-users"></use></svg>
+                        People
+                    </a>
+                }
+                <a class="quick-action" asp-controller="Profile" asp-action="Index">
+                    <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-settings"></use></svg>
+                    Profile settings
+                </a>
+                <a class="quick-action" asp-controller="Home" asp-action="Contact">
+                    <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-mail"></use></svg>
+                    Get support
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

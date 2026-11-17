@@ -1,0 +1,129 @@
+@model IReadOnlyList<Product>
+@{
+    ViewData["Title"] = "Inventory";
+    var role = ViewData["Role"] as UserRole? ?? UserRole.Farmer;
+    var totalValue = Model.Where(x => x.IsActive).Sum(x => x.Price * x.Quantity);
+    var lowStock = Model.Count(x => x.IsActive && x.Quantity > 0 && x.Quantity <= 20);
+}
+
+<div class="dash-head">
+    <div>
+        <span class="eyebrow">@role.ToDisplay() inventory</span>
+        <h2>What you're moving.</h2>
+        <p>@Model.Count listing@(Model.Count == 1 ? "" : "s") · ₦@totalValue.ToString("N0") on the shelf · @lowStock low on stock</p>
+    </div>
+    <div class="dash-actions">
+        <a class="btn btn-outline btn-sm" asp-controller="Marketplace" asp-action="Index">
+            <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-basket"></use></svg>
+            View market
+        </a>
+        @if (role == UserRole.Farmer)
+        {
+            <a class="btn btn-primary btn-sm" asp-controller="Dashboard" asp-action="NewProduct">
+                <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-plus"></use></svg>
+                New listing
+            </a>
+        }
+    </div>
+</div>
+
+<div class="panel">
+    <div class="panel-head">
+        <h4>Your lots</h4>
+        <span class="badge badge-forest">@Model.Count total</span>
+    </div>
+    <div class="panel-body flush">
+        @if (Model.Count > 0)
+        {
+            <div class="table-wrap">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Lot</th>
+                            <th>Category</th>
+                            <th>Stage</th>
+                            <th>Price</th>
+                            <th>Stock</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var product in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="table-product">
+                                        <img src="@product.ImageUrl" alt="" />
+                                        <div>
+                                            <strong>@product.Name</strong>
+                                            <span>@product.Reference · @(string.IsNullOrWhiteSpace(product.Origin) ? "Nigeria" : product.Origin)</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>@product.Category.ToDisplay()</td>
+                                <td><span class="badge badge-warn">@product.Stage.ToDisplay()</span></td>
+                                <td class="mono">₦@product.Price.ToString("N0")<span class="text-xs text-muted"> /@product.Unit</span></td>
+                                <td>
+                                    <strong>@product.Quantity</strong>
+                                    <span class="text-xs text-muted">@product.Unit</span>
+                                    @if (product.Quantity > 0 && product.Quantity <= 20)
+                                    {
+                                        <div class="text-xs" style="color:var(--danger)">Low stock</div>
+                                    }
+                                </td>
+                                <td>
+                                    @if (!product.IsActive || product.Quantity <= 0)
+                                    {
+                                        <span class="badge badge-muted">Paused</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge badge-success"><span class="dot"></span>Live</span>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="table-actions">
+                                        <a class="btn-icon" asp-controller="Marketplace" asp-action="Details" asp-route-id="@product.Id" aria-label="View @product.Name">
+                                            <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-eye"></use></svg>
+                                        </a>
+                                        <a class="btn-icon" asp-controller="Dashboard" asp-action="EditProduct" asp-route-id="@product.Id" aria-label="Edit @product.Name">
+                                            <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-edit"></use></svg>
+                                        </a>
+                                        <form method="post" asp-controller="Dashboard" asp-action="DeleteProduct" asp-route-id="@product.Id"
+                                              onsubmit="return confirm('Remove @product.Name from the marketplace? This cannot be undone.');">
+                                            @Html.AntiForgeryToken()
+                                            <button class="btn-icon" type="submit" aria-label="Delete @product.Name">
+                                                <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-trash"></use></svg>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="empty-state" style="border:0;padding:3rem 1rem">
+                <span class="icon-badge"><svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-package"></use></svg></span>
+                <h3>No lots in your inventory</h3>
+                <p>
+                    @(role == UserRole.Farmer
+                        ? "List your first harvest and start reaching buyers beyond your local market."
+                        : "Acquire a lot from the marketplace and it will appear here for you to sell on.")
+                </p>
+                @if (role == UserRole.Farmer)
+                {
+                    <a class="btn btn-primary" asp-controller="Dashboard" asp-action="NewProduct">List a harvest</a>
+                }
+                else
+                {
+                    <a class="btn btn-primary" asp-controller="Marketplace" asp-action="Index">Find a lot to acquire</a>
+                }
+            </div>
+        }
+    </div>
+</div>

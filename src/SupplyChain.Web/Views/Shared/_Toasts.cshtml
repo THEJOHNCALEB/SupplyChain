@@ -1,0 +1,31 @@
+@{
+    var success = TempData["Success"] as string;
+    var error = TempData["Error"] as string;
+    var info = TempData["Info"] as string;
+}
+@if (!string.IsNullOrWhiteSpace(success) || !string.IsNullOrWhiteSpace(error) || !string.IsNullOrWhiteSpace(info))
+{
+    <div class="toast-stack" aria-live="polite">
+        @if (!string.IsNullOrWhiteSpace(success))
+        {
+            <div class="toast success" data-auto role="status">
+                <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-check-circle"></use></svg>
+                <span>@success</span>
+            </div>
+        }
+        @if (!string.IsNullOrWhiteSpace(error))
+        {
+            <div class="toast error" data-auto role="alert">
+                <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-alert"></use></svg>
+                <span>@error</span>
+            </div>
+        }
+        @if (!string.IsNullOrWhiteSpace(info))
+        {
+            <div class="toast info" data-auto role="status">
+                <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-info"></use></svg>
+                <span>@info</span>
+            </div>
+        }
+    </div>
+}

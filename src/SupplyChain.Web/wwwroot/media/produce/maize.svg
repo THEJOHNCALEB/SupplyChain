@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="Golden maize cobs">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FBF2C9"/>
+      <stop offset="1" stop-color="#E7CE7A"/>
+    </linearGradient>
+    <linearGradient id="cob" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFD65C"/>
+      <stop offset="1" stop-color="#E9A62A"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#bg)"/>
+  <circle cx="660" cy="120" r="180" fill="#FFFDF0" opacity=".4"/>
+  <circle cx="120" cy="520" r="160" fill="#C9A33B" opacity=".16"/>
+  <ellipse cx="410" cy="512" rx="260" ry="38" fill="#8A6416" opacity=".15"/>
+  <g transform="rotate(-16 360 340)">
+    <path d="M300 140c58-30 118-2 132 56 15 60-12 170-66 224-42 42-104 30-118-24-12-48 20-92 20-150 0-54-18-78 32-106Z" fill="url(#cob)"/>
+    <g fill="#B97C12" opacity=".55">
+      <circle cx="330" cy="200" r="5"/><circle cx="365" cy="196" r="5"/><circle cx="400" cy="206" r="5"/>
+      <circle cx="320" cy="238" r="5"/><circle cx="358" cy="236" r="5"/><circle cx="396" cy="244" r="5"/>
+      <circle cx="312" cy="278" r="5"/><circle cx="352" cy="276" r="5"/><circle cx="390" cy="284" r="5"/>
+      <circle cx="306" cy="318" r="5"/><circle cx="346" cy="316" r="5"/><circle cx="384" cy="324" r="5"/>
+      <circle cx="300" cy="358" r="5"/><circle cx="340" cy="356" r="5"/><circle cx="376" cy="364" r="5"/>
+    </g>
+    <path d="M282 170c-34 42-44 130-28 196 12 50 40 76 72 70-28-32-42-96-42-150 0-52 4-88-2-116Z" fill="#7BAE4B"/>
+    <path d="M436 190c34 36 52 116 40 178-9 46-34 72-64 70 24-32 34-92 32-144-2-48-12-80-8-104Z" fill="#68993D"/>
+  </g>
+  <g transform="rotate(18 580 360)">
+    <path d="M548 210c44-24 92 0 104 44 13 48-8 136-50 178-32 32-78 20-90-20-10-38 14-72 14-118 0-42-14-60 22-84Z" fill="url(#cob)"/>
+    <g fill="#B97C12" opacity=".5">
+      <circle cx="572" cy="262" r="4"/><circle cx="604" cy="258" r="4"/><circle cx="632" cy="268" r="4"/>
+      <circle cx="566" cy="300" r="4"/><circle cx="598" cy="298" r="4"/><circle cx="628" cy="306" r="4"/>
+      <circle cx="560" cy="338" r="4"/><circle cx="592" cy="336" r="4"/><circle cx="622" cy="344" r="4"/>
+    </g>
+    <path d="M536 236c-26 34-34 104-22 156 10 40 32 60 58 56-24-26-34-76-34-118 0-42 4-70-2-94Z" fill="#7BAE4B"/>
+    <path d="M654 250c26 30 40 90 30 138-8 36-26 56-48 54 18-26 26-72 24-112-2-38-10-64-6-80Z" fill="#68993D"/>
+  </g>
+  <g fill="#8A6416" opacity=".35">
+    <ellipse cx="220" cy="470" rx="22" ry="11" transform="rotate(-20 220 470)"/>
+    <ellipse cx="255" cy="492" rx="18" ry="9" transform="rotate(10 255 492)"/>
+    <ellipse cx="580" cy="480" rx="20" ry="10" transform="rotate(16 580 480)"/>
+  </g>
+</svg>

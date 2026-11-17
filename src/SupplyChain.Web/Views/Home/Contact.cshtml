@@ -1,0 +1,70 @@
+@{
+    ViewData["Title"] = "Contact SupplyChain";
+    ViewData["Description"] = "Questions about selling, sourcing or delivery? Get in touch with the SupplyChain team.";
+}
+
+<section class="page-head">
+    <div class="container">
+        <div class="breadcrumb">
+            <a asp-controller="Home" asp-action="Index">Home</a>
+            <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-chevron-right"></use></svg>
+            <span>Contact</span>
+        </div>
+        <span class="eyebrow">Say hello</span>
+        <h1>We answer like humans.</h1>
+        <p class="lead">Questions about listing, sourcing, logistics or the codebase? Reach the right person directly.</p>
+    </div>
+</section>
+
+<section class="section-tight">
+    <div class="container">
+        <div class="grid grid-3">
+            <div class="feature-card reveal">
+                <span class="icon-badge"><svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-mail"></use></svg></span>
+                <h3>Email</h3>
+                <p>For account, marketplace and partnership questions.</p>
+                <a class="link-arrow mt-2" href="mailto:hello@supplychain.dev">hello@supplychain.dev <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-arrow-up-right"></use></svg></a>
+            </div>
+            <div class="feature-card reveal">
+                <span class="icon-badge amber"><svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-phone"></use></svg></span>
+                <h3>Phone</h3>
+                <p>Monday to Saturday, 8am – 6pm West Africa Time.</p>
+                <a class="link-arrow mt-2" href="tel:+2348000000000">+234 800 000 0000 <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-arrow-up-right"></use></svg></a>
+            </div>
+            <div class="feature-card reveal">
+                <span class="icon-badge"><svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-map-pin"></use></svg></span>
+                <h3>Visit</h3>
+                <p>Lagos, Nigeria. Visits by appointment for verified partners.</p>
+                <span class="text-sm text-muted mt-2">14 Adeola Odeku Street, Victoria Island</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container split">
+        <div class="reveal">
+            <span class="eyebrow">Frequently asked</span>
+            <h2>Before you write.</h2>
+            <p class="lead">Most questions have a quick answer. If yours isn't here, we're one email away.</p>
+        </div>
+        <div class="faq reveal">
+            <details open>
+                <summary>How do I start selling?</summary>
+                <p>Create a farmer account, complete your farm profile, then add your first lot from the dashboard. Listings appear in the marketplace immediately.</p>
+            </details>
+            <details>
+                <summary>How does delivery work?</summary>
+                <p>Retailers and customers arrange delivery at checkout. Delivery is ₦2,500, and free on orders above ₦100,000.</p>
+            </details>
+            <details>
+                <summary>Can I change my role later?</summary>
+                <p>Yes. Ask a marketplace admin to update your role, or contact support and we'll help you switch.</p>
+            </details>
+            <details>
+                <summary>Is the platform open source?</summary>
+                <p>Yes — the full codebase is on GitHub under the MIT licence. Contributions and self-hosting are welcome.</p>
+            </details>
+        </div>
+    </div>
+</section>

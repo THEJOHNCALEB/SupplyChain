@@ -1,0 +1,116 @@
+@model RegisterViewModel
+@{
+    ViewData["Title"] = "Create your account";
+}
+
+<h1>Join the chain.</h1>
+<p class="lead">One account, four ways to use it. Pick the role that fits how you buy or sell produce.</p>
+
+<form method="post" asp-controller="Auth" asp-action="Register" novalidate>
+    @Html.AntiForgeryToken()
+    <div asp-validation-summary="ModelOnly"></div>
+
+    <div class="field-row">
+        <div class="field">
+            <label asp-for="FirstName"></label>
+            <input class="input" asp-for="FirstName" autocomplete="given-name" placeholder="Amina" />
+            <span asp-validation-for="FirstName" class="validation"></span>
+        </div>
+        <div class="field">
+            <label asp-for="LastName"></label>
+            <input class="input" asp-for="LastName" autocomplete="family-name" placeholder="Bello" />
+            <span asp-validation-for="LastName" class="validation"></span>
+        </div>
+    </div>
+
+    <div class="field">
+        <label asp-for="Email"></label>
+        <input class="input" asp-for="Email" type="email" autocomplete="email" placeholder="you@example.com" />
+        <span asp-validation-for="Email" class="validation"></span>
+    </div>
+
+    <div class="field-row">
+        <div class="field">
+            <label asp-for="Username"></label>
+            <input class="input" asp-for="Username" autocomplete="username" placeholder="amina" />
+            <span asp-validation-for="Username" class="validation"></span>
+        </div>
+        <div class="field">
+            <label asp-for="PhoneNumber"></label>
+            <input class="input" asp-for="PhoneNumber" type="tel" autocomplete="tel" placeholder="0803 555 0101" />
+            <span asp-validation-for="PhoneNumber" class="validation"></span>
+        </div>
+    </div>
+
+    <div class="field">
+        <span class="label">How will you use SupplyChain?</span>
+        <div class="role-picker">
+            @foreach (var role in RoleCatalog.ChainOrder)
+            {
+                <label class="role-option">
+                    <input type="radio" asp-for="Role" value="@role" checked="@(Model.Role == role)" />
+                    <span>
+                        @role.ToDisplay()
+                        <small>@RoleCatalog.StageLabel(role) · @RoleCatalog.Tagline(role)</small>
+                    </span>
+                </label>
+            }
+        </div>
+        <span asp-validation-for="Role" class="validation"></span>
+    </div>
+
+    <div class="field">
+        <label asp-for="StoreName">Farm or business name <span class="text-muted">(optional)</span></label>
+        <input class="input" asp-for="StoreName" placeholder="Bello Family Farms" />
+        <span asp-validation-for="StoreName" class="validation"></span>
+    </div>
+
+    <div class="field-row">
+        <div class="field">
+            <label asp-for="Password"></label>
+            <div class="password-wrap">
+                <input class="input" asp-for="Password" type="password" id="register-password" autocomplete="new-password" placeholder="At least 8 characters" />
+                <button class="password-toggle" type="button" data-password-toggle="register-password" aria-label="Show password">
+                    <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-eye"></use></svg>
+                </button>
+            </div>
+            <span asp-validation-for="Password" class="validation"></span>
+        </div>
+        <div class="field">
+            <label asp-for="ConfirmPassword"></label>
+            <div class="password-wrap">
+                <input class="input" asp-for="ConfirmPassword" type="password" id="register-confirm" autocomplete="new-password" placeholder="Repeat password" />
+                <button class="password-toggle" type="button" data-password-toggle="register-confirm" aria-label="Show password">
+                    <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-eye"></use></svg>
+                </button>
+            </div>
+            <span asp-validation-for="ConfirmPassword" class="validation"></span>
+        </div>
+    </div>
+
+    <div class="field">
+        <label asp-for="Bio">A short bio <span class="text-muted">(optional)</span></label>
+        <textarea class="textarea" asp-for="Bio" rows="3" placeholder="Tell buyers what you grow, where, and how."></textarea>
+        <span asp-validation-for="Bio" class="validation"></span>
+    </div>
+
+    <label class="checkbox mb-3">
+        <input asp-for="AcceptTerms" type="checkbox" />
+        <span>I agree to the <a asp-controller="Home" asp-action="Privacy">privacy policy</a> and to trade honestly on SupplyChain.</span>
+    </label>
+    <span asp-validation-for="AcceptTerms" class="validation"></span>
+
+    <button class="btn btn-primary btn-block btn-lg mt-2" type="submit">
+        Create account
+        <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-arrow-right"></use></svg>
+    </button>
+</form>
+
+<p class="auth-alt">
+    Already have an account?
+    <a asp-controller="Auth" asp-action="Login">Sign in</a>
+</p>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

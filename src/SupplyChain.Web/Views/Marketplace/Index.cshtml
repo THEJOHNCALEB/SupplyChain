@@ -1,0 +1,160 @@
+@model MarketplaceViewModel
+@{
+    var role = Model.ViewerRole;
+    var heading = role switch
+    {
+        UserRole.Distributor => "Farm-gate lots, ready to move.",
+        UserRole.Retailer => "Distribution lots for your shelves.",
+        UserRole.Admin => "Every lot on the marketplace.",
+        _ => "Fresh produce, ready for your kitchen."
+    };
+    var subheading = role switch
+    {
+        UserRole.Distributor => "Source directly from verified farms and set your resale price as you take custody.",
+        UserRole.Retailer => "Buy from distributors with a recorded custody trail, then sell to homes.",
+        UserRole.Admin => "Review all active listings across every stage of the chain.",
+        _ => "Traceable fruit, vegetables, tubers, grains and more — from farms and retailers across Nigeria."
+    };
+    ViewData["Title"] = "Marketplace";
+    var query = Model.Query;
+}
+
+<section class="page-head">
+    <div class="container">
+        <div class="breadcrumb">
+            <a asp-controller="Home" asp-action="Index">Home</a>
+            <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-chevron-right"></use></svg>
+            <span>Marketplace</span>
+        </div>
+        <div class="row-between wrap">
+            <div>
+                <span class="eyebrow">@Model.Stage.ToDisplay()</span>
+                <h1>@heading</h1>
+                <p class="lead">@subheading</p>
+            </div>
+            @if (role == UserRole.Farmer)
+            {
+                <a class="btn btn-primary" asp-controller="Dashboard" asp-action="NewProduct">
+                    <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-plus"></use></svg>
+                    List a harvest
+                </a>
+            }
+        </div>
+    </div>
+</section>
+
+<section class="section-tight">
+    <div class="container">
+        <form class="filter-bar" method="get" asp-controller="Marketplace" asp-action="Index" role="search">
+            <div class="search-field grow">
+                <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-search"></use></svg>
+                <input class="input" type="search" name="search" value="@query.Search" placeholder="Search yam, rice, tomatoes…" aria-label="Search produce" />
+            </div>
+            <select class="select" name="category" aria-label="Filter by category">
+                <option value="">All categories</option>
+                @foreach (var category in Enum.GetValues<ProductCategory>())
+                {
+                    <option value="@category" selected="@(query.Category == category)">@category.ToDisplay()</option>
+                }
+            </select>
+            <select class="select" name="sort" aria-label="Sort results">
+                <option value="newest" selected="@(query.Sort == "newest")">Newest first</option>
+                <option value="price-asc" selected="@(query.Sort == "price-asc")">Price: low to high</option>
+                <option value="price-desc" selected="@(query.Sort == "price-desc")">Price: high to low</option>
+                <option value="name" selected="@(query.Sort == "name")">Name A – Z</option>
+            </select>
+            @if (role == UserRole.Admin)
+            {
+                <select class="select" name="stage" aria-label="Filter by stage">
+                    <option value="">All stages</option>
+                    @foreach (var stage in Enum.GetValues<ProductStage>())
+                    {
+                        <option value="@stage" selected="@(query.Stage == stage)">@stage.ToDisplay()</option>
+                    }
+                </select>
+            }
+            <button class="btn btn-primary" type="submit">
+                <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-filter"></use></svg>
+                Apply
+            </button>
+        </form>
+
+        <div class="filter-chips">
+            <a class="chip @(query.Category is null ? "is-active" : null)"
+               asp-controller="Marketplace" asp-action="Index"
+               asp-route-search="@query.Search" asp-route-sort="@query.Sort" asp-route-stage="@(role == UserRole.Admin ? query.Stage : null)">
+                All
+                <span class="chip-count">@Model.Results.TotalCount</span>
+            </a>
+            @foreach (var entry in Model.CategoryCounts.OrderByDescending(x => x.Value))
+            {
+                <a class="chip @(query.Category == entry.Key ? "is-active" : null)"
+                   asp-controller="Marketplace" asp-action="Index"
+                   asp-route-category="@entry.Key" asp-route-search="@query.Search"
+                   asp-route-sort="@query.Sort" asp-route-stage="@(role == UserRole.Admin ? query.Stage : null)">
+                    @entry.Key.ToDisplay()
+                    <span class="chip-count">@entry.Value</span>
+                </a>
+            }
+        </div>
+
+        <div class="results-meta">
+            <span>
+                Showing <strong>@Model.Results.Items.Count</strong> of <strong>@Model.Results.TotalCount</strong>
+                @(Model.Results.TotalCount == 1 ? "lot" : "lots")
+                @if (!string.IsNullOrWhiteSpace(query.Search))
+                {
+                    <span> for “@query.Search”</span>
+                }
+            </span>
+            <span>Page @Model.Results.Page of @Math.Max(Model.Results.TotalPages, 1)</span>
+        </div>
+
+        @if (Model.Results.Items.Count > 0)
+        {
+            <div class="product-grid">
+                @foreach (var product in Model.Results.Items)
+                {
+                    <partial name="_ProductCard" model="product" />
+                }
+            </div>
+
+            @if (Model.Results.TotalPages > 1)
+            {
+                <nav class="pagination" aria-label="Marketplace pages">
+                    <a class="@(Model.Results.HasPrevious ? null : "is-disabled")"
+                       asp-controller="Marketplace" asp-action="Index" asp-route-page="@(Model.Results.Page - 1)"
+                       asp-route-search="@query.Search" asp-route-category="@query.Category" asp-route-sort="@query.Sort"
+                       asp-route-stage="@(role == UserRole.Admin ? query.Stage : null)" aria-label="Previous page">
+                        <svg class="icon" aria-hidden="true" style="transform:rotate(180deg)"><use href="/media/icons.svg#i-arrow-right"></use></svg>
+                    </a>
+
+                    @for (var pageNumber = 1; pageNumber <= Model.Results.TotalPages; pageNumber++)
+                    {
+                        <a class="@(pageNumber == Model.Results.Page ? "is-current" : null)"
+                           asp-controller="Marketplace" asp-action="Index" asp-route-page="@pageNumber"
+                           asp-route-search="@query.Search" asp-route-category="@query.Category" asp-route-sort="@query.Sort"
+                           asp-route-stage="@(role == UserRole.Admin ? query.Stage : null)"
+                           aria-label="Page @pageNumber">@pageNumber</a>
+                    }
+
+                    <a class="@(Model.Results.HasNext ? null : "is-disabled")"
+                       asp-controller="Marketplace" asp-action="Index" asp-route-page="@(Model.Results.Page + 1)"
+                       asp-route-search="@query.Search" asp-route-category="@query.Category" asp-route-sort="@query.Sort"
+                       asp-route-stage="@(role == UserRole.Admin ? query.Stage : null)" aria-label="Next page">
+                        <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-arrow-right"></use></svg>
+                    </a>
+                </nav>
+            }
+        }
+        else
+        {
+            <div class="empty-state">
+                <span class="icon-badge"><svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-search"></use></svg></span>
+                <h3>Nothing matches that search</h3>
+                <p>Try a different keyword or category. Fresh lots arrive every week.</p>
+                <a class="btn btn-primary" asp-controller="Marketplace" asp-action="Index">Clear filters</a>
+            </div>
+        }
+    </div>
+</section>
