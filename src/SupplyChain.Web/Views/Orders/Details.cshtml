@@ -1,0 +1,223 @@
+@model Order
+@{
+    ViewData["Title"] = Model.Reference;
+    var isCustomer = ViewData["IsCustomer"] as bool? ?? false;
+    var canManage = ViewData["CanManage"] as bool? ?? false;
+    var steps = new[] { OrderStatus.Pending, OrderStatus.Paid, OrderStatus.Processing, OrderStatus.Shipped, OrderStatus.Delivered };
+    var currentStep = Model.Status switch
+    {
+        OrderStatus.Pending => 0,
+        OrderStatus.Paid => 1,
+        OrderStatus.Processing => 2,
+        OrderStatus.Shipped => 3,
+        OrderStatus.Delivered => 4,
+        _ => -1
+    };
+    var nextOptions = Model.Status switch
+    {
+        OrderStatus.Pending => new[] { OrderStatus.Paid, OrderStatus.Cancelled },
+        OrderStatus.Paid => new[] { OrderStatus.Processing, OrderStatus.Cancelled },
+        OrderStatus.Processing => new[] { OrderStatus.Shipped, OrderStatus.Cancelled },
+        OrderStatus.Shipped => new[] { OrderStatus.Delivered },
+        _ => Array.Empty<OrderStatus>()
+    };
+    var canCancel = isCustomer && Model.Status is not (OrderStatus.Delivered or OrderStatus.Cancelled);
+}
+
+<section class="page-head">
+    <div class="container">
+        <div class="breadcrumb">
+            <a asp-controller="Home" asp-action="Index">Home</a>
+            <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-chevron-right"></use></svg>
+            <a asp-controller="Orders" asp-action="Index">Orders</a>
+            <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-chevron-right"></use></svg>
+            <span>@Model.Reference</span>
+        </div>
+        <div class="row-between wrap">
+            <div>
+                <span class="eyebrow">Order @Model.Reference</span>
+                <h1>@(isCustomer ? "Your order, step by step." : "Order details.")</h1>
+                <p class="lead">Placed @Model.CreatedAt.ToString("dd MMMM yyyy 'at' HH:mm") · @Model.PaymentMethod</p>
+            </div>
+            <span class="badge @Model.Status.BadgeClass()" style="font-size:.8rem;padding:.5rem .9rem">@Model.Status.ToDisplay()</span>
+        </div>
+    </div>
+</section>
+
+<section class="section-tight">
+    <div class="container">
+        @if (Model.Status == OrderStatus.Cancelled)
+        {
+            <div class="callout warn mb-3">
+                <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-alert"></use></svg>
+                This order was cancelled. Stock has been returned to the seller's inventory.
+            </div>
+        }
+        else
+        {
+            <div class="order-status-steps">
+                @for (var i = 0; i < steps.Length; i++)
+                {
+                    var state = i < currentStep ? "is-done" : i == currentStep ? "is-current" : "";
+                    <div class="status-step @state">
+                        <i></i>
+                        <span>@steps[i].ToDisplay()</span>
+                    </div>
+                }
+            </div>
+        }
+
+        <div class="dash-grid">
+            <div class="dash-stack">
+                <div class="panel">
+                    <div class="panel-head">
+                        <h4>Items</h4>
+                        <span class="badge badge-forest">@Model.Items.Sum(x => x.Quantity) unit@(Model.Items.Sum(x => x.Quantity) == 1 ? "" : "s")</span>
+                    </div>
+                    <div class="panel-body flush">
+                        <div class="table-wrap">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Seller</th>
+                                        <th>Qty</th>
+                                        <th>Unit price</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.Items)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <div class="table-product">
+                                                    <img src="@(string.IsNullOrWhiteSpace(item.ImageUrl) ? "/media/produce/yam.svg" : item.ImageUrl)" alt="" />
+                                                    <div>
+                                                        <strong>@item.ProductName</strong>
+                                                        <span>per @item.Unit</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>@item.SellerName</td>
+                                            <td>@item.Quantity</td>
+                                            <td class="mono">₦@item.UnitPrice.ToString("N0")</td>
+                                            <td class="mono">₦@item.LineTotal.ToString("N0")</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel card-pad">
+                    <h4>Delivery</h4>
+                    <dl class="detail-list">
+                        <div><dt>Name</dt><dd>@Model.ShippingName</dd></div>
+                        <div><dt>Phone</dt><dd>@Model.ShippingPhone</dd></div>
+                        <div><dt>Address</dt><dd>@Model.ShippingAddress, @Model.ShippingCity, @Model.ShippingState</dd></div>
+                        <div><dt>Payment</dt><dd>@Model.PaymentMethod</dd></div>
+                        @if (!string.IsNullOrWhiteSpace(Model.Notes))
+                        {
+                            <div><dt>Note</dt><dd>@Model.Notes</dd></div>
+                        }
+                        @if (Model.PaidAt is not null)
+                        {
+                            <div><dt>Paid</dt><dd>@Model.PaidAt.Value.ToString("dd MMM yyyy, HH:mm")</dd></div>
+                        }
+                        @if (Model.DeliveredAt is not null)
+                        {
+                            <div><dt>Delivered</dt><dd>@Model.DeliveredAt.Value.ToString("dd MMM yyyy, HH:mm")</dd></div>
+                        }
+                    </dl>
+                </div>
+            </div>
+
+            <div class="dash-stack">
+                <div class="card card-pad">
+                    <h4>Totals</h4>
+                    <div class="summary-row">
+                        <span>Subtotal</span>
+                        <strong>₦@Model.Subtotal.ToString("N0")</strong>
+                    </div>
+                    <div class="summary-row">
+                        <span>Delivery</span>
+                        <strong>@(Model.DeliveryFee == 0 ? "Free" : $"₦{Model.DeliveryFee:N0}")</strong>
+                    </div>
+                    <div class="summary-total">
+                        <span>Total</span>
+                        <strong>₦@Model.Total.ToString("N0")</strong>
+                    </div>
+                    <div class="info-strip" style="border-radius:var(--radius-sm);font-size:.76rem">
+                        <span><svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-shield"></use></svg> 4 custody records</span>
+                    </div>
+                </div>
+
+                @if (isCustomer && Model.Customer is not null)
+                {
+                    <div class="panel card-pad">
+                        <h4>Sold by</h4>
+                        @foreach (var seller in Model.Items.GroupBy(x => x.SellerId))
+                        {
+                            var first = seller.First();
+                            <div class="seller-card mb-2">
+                                <span class="avatar-fallback">@(first.SellerName.Length > 0 ? first.SellerName[..1] : "S")</span>
+                                <div class="grow">
+                                    <strong>@first.SellerName</strong>
+                                    <span>@seller.Count() item@(seller.Count() == 1 ? "" : "s") in this order</span>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+
+                @if (canManage && nextOptions.Length > 0)
+                {
+                    <div class="panel card-pad">
+                        <h4>Update status</h4>
+                        <p class="text-sm text-muted">Move this order along the fulfilment chain.</p>
+                        <form method="post" asp-controller="Orders" asp-action="UpdateStatus" asp-route-id="@Model.Id">
+                            @Html.AntiForgeryToken()
+                            <div class="field">
+                                <label for="order-status">New status</label>
+                                <select class="select" id="order-status" name="status">
+                                    @foreach (var status in nextOptions)
+                                    {
+                                        <option value="@status">@status.ToDisplay()</option>
+                                    }
+                                </select>
+                            </div>
+                            <button class="btn btn-primary btn-block" type="submit">
+                                <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-refresh"></use></svg>
+                                Save status
+                            </button>
+                        </form>
+                    </div>
+                }
+
+                @if (canCancel)
+                {
+                    <div class="panel card-pad">
+                        <h4>Cancel order</h4>
+                        <p class="text-sm text-muted">Changed your mind? Cancel before delivery and stock returns to the seller.</p>
+                        <form method="post" asp-controller="Orders" asp-action="UpdateStatus" asp-route-id="@Model.Id"
+                              onsubmit="return confirm('Cancel this order?');">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="status" value="@OrderStatus.Cancelled" />
+                            <button class="btn btn-danger btn-block" type="submit">
+                                <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-close"></use></svg>
+                                Cancel order
+                            </button>
+                        </form>
+                    </div>
+                }
+
+                <a class="btn btn-outline btn-block" asp-controller="Orders" asp-action="Index">
+                    <svg class="icon" aria-hidden="true" style="transform:rotate(180deg)"><use href="/media/icons.svg#i-arrow-right"></use></svg>
+                    All orders
+                </a>
+            </div>
+        </div>
+    </div>
+</section>

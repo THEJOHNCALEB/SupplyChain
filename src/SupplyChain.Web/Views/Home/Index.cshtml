@@ -1,0 +1,270 @@
+@model HomeViewModel
+@{
+    ViewData["Title"] = "Fresh produce, traced from farm to doorstep";
+    ViewData["Description"] = "SupplyChain is a traceable agricultural marketplace connecting Nigerian farmers, distributors, retailers and homes.";
+    var categories = new[]
+    {
+        ProductCategory.Tubers,
+        ProductCategory.Grains,
+        ProductCategory.Vegetables,
+        ProductCategory.Fruits,
+        ProductCategory.Livestock,
+        ProductCategory.Dairy,
+        ProductCategory.Spices,
+        ProductCategory.Other
+    };
+    string CategoryIcon(ProductCategory category) => category switch
+    {
+        ProductCategory.Grains => "i-layers",
+        ProductCategory.Tubers => "i-sprout",
+        ProductCategory.Fruits => "i-star",
+        ProductCategory.Vegetables => "i-leaf",
+        ProductCategory.Livestock => "i-shield",
+        ProductCategory.Dairy => "i-basket",
+        ProductCategory.Spices => "i-sparkles",
+        _ => "i-grid"
+    };
+}
+
+<section class="hero">
+    <div class="container hero-grid">
+        <div class="hero-copy reveal">
+            <span class="eyebrow">Nigeria's traceable farm marketplace</span>
+            <h1>Fresh food, with its <em>whole story</em> attached.</h1>
+            <p class="lead">
+                Farmers list the harvest. Distributors move it. Retailers stock it. Homes receive it —
+                and every hand-off, price and origin is recorded along the way.
+            </p>
+            <div class="hero-actions">
+                <a class="btn btn-primary btn-lg" asp-controller="Marketplace" asp-action="Index">
+                    Shop the marketplace
+                    <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-arrow-right"></use></svg>
+                </a>
+                <a class="btn btn-outline btn-lg" asp-controller="Auth" asp-action="Register" asp-route-role="Farmer">
+                    Sell your harvest
+                </a>
+            </div>
+            <div class="hero-proof">
+                <div class="proof-item">
+                    <strong>@Model.ProductCount</strong>
+                    <span>live lots</span>
+                </div>
+                <div class="proof-item">
+                    <strong>@Model.PartnerCount</strong>
+                    <span>chain partners</span>
+                </div>
+                <div class="proof-item">
+                    <strong>@Model.CustomerCount</strong>
+                    <span>happy homes</span>
+                </div>
+                <div class="proof-item">
+                    <strong>@Model.DeliveredOrders</strong>
+                    <span>delivered orders</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="hero-visual reveal">
+            <div class="hero-photo">
+                <img src="/media/produce/tomatoes.svg" alt="Vine-ripened Roma tomatoes" />
+                <div class="hero-photo-caption">
+                    <span class="icon-badge amber">
+                        <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-map-pin"></use></svg>
+                    </span>
+                    <div>
+                        <strong>Kano → Lagos in 48 hours</strong>
+                        <span>Harvested Monday · delivered Wednesday</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-float one">
+                <span class="icon-badge">
+                    <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-check-circle"></use></svg>
+                </span>
+                <div>
+                    Lot verified
+                    <small>4 custody records</small>
+                </div>
+            </div>
+            <div class="hero-float two">
+                <span class="icon-badge amber">
+                    <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-truck"></use></svg>
+                </span>
+                <div>
+                    Free delivery
+                    <small>Orders above ₦100,000</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-tight">
+    <div class="container">
+        <div class="info-strip reveal">
+            <span><svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-shield"></use></svg> Verified sellers</span>
+            <span><svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-layers"></use></svg> Full custody trail</span>
+            <span><svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-truck"></use></svg> Nationwide delivery</span>
+            <span><svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-wallet"></use></svg> Cash on delivery</span>
+            <span><svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-leaf"></use></svg> Harvested to order</span>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="section-head reveal">
+            <div>
+                <span class="eyebrow">Fresh this week</span>
+                <h2>Produce worth travelling for.</h2>
+                <p>Hand-picked lots from farmers and distributors across the country, graded and ready to move.</p>
+            </div>
+            <a class="link-arrow" asp-controller="Marketplace" asp-action="Index">
+                Browse everything
+                <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-arrow-right"></use></svg>
+            </a>
+        </div>
+
+        @if (Model.Featured.Count > 0)
+        {
+            <div class="product-grid">
+                @foreach (var product in Model.Featured)
+                {
+                    <partial name="_ProductCard" model="product" />
+                }
+            </div>
+        }
+        else
+        {
+            <div class="empty-state">
+                <span class="icon-badge"><svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-basket"></use></svg></span>
+                <h3>The market is being restocked</h3>
+                <p>Fresh lots will appear here shortly. Check back in a moment.</p>
+                <a class="btn btn-primary" asp-controller="Marketplace" asp-action="Index">Open marketplace</a>
+            </div>
+        }
+    </div>
+</section>
+
+<section class="section bg-tint" id="how">
+    <div class="container">
+        <div class="section-head reveal">
+            <div>
+                <span class="eyebrow">How the chain works</span>
+                <h2>One lot. Four trusted hands.</h2>
+                <p>Every step is a recorded hand-off, so quality, price and origin stay honest from farm to doorstep.</p>
+            </div>
+            <a class="link-arrow" asp-controller="Home" asp-action="About">
+                Why we built this
+                <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-arrow-right"></use></svg>
+            </a>
+        </div>
+
+        <div class="chain">
+            @foreach (var role in RoleCatalog.ChainOrder)
+            {
+                <div class="chain-step reveal">
+                    <h4>@RoleCatalog.StageLabel(role) <span class="text-muted">· @role.ToDisplay()</span></h4>
+                    <p>@RoleCatalog.Tagline(role)</p>
+                    <span class="icon-badge @(role is UserRole.Retailer or UserRole.Customer ? "amber" : null)">
+                        <svg class="icon" aria-hidden="true">
+                            <use href="/media/icons.svg#@(role switch
+                            {
+                                UserRole.Farmer => "i-sprout",
+                                UserRole.Distributor => "i-truck",
+                                UserRole.Retailer => "i-store",
+                                _ => "i-home"
+                            })"></use>
+                        </svg>
+                    </span>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="section-head reveal">
+            <div>
+                <span class="eyebrow">Shop by category</span>
+                <h2>Whatever the kitchen needs.</h2>
+                <p>From tubers and grains to spices, dairy and livestock — sourced with provenance.</p>
+            </div>
+        </div>
+
+        <div class="category-grid">
+            @foreach (var category in categories)
+            {
+                var count = Model.CategoryCounts.TryGetValue(category, out var value) ? value : 0;
+                <a class="category-card reveal" asp-controller="Marketplace" asp-action="Index" asp-route-category="@category">
+                    <span class="icon-badge @(category is ProductCategory.Spices or ProductCategory.Fruits ? "amber" : null)">
+                        <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#@CategoryIcon(category)"></use></svg>
+                    </span>
+                    <strong>@category.ToDisplay()</strong>
+                    <span>@count @(count == 1 ? "lot" : "lots") available</span>
+                </a>
+            }
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container split">
+        <div class="story-media reveal">
+            <img src="/media/produce/rice.svg" alt="Jute sack of freshly milled Ofada rice" />
+            <div class="story-badge">
+                <strong>+32%</strong>
+                <span>more income retained by smallholder farms</span>
+            </div>
+        </div>
+        <div class="reveal">
+            <span class="eyebrow">Why it matters</span>
+            <h2>Less waste. Fairer prices. Better food.</h2>
+            <p class="lead">
+                Produce loses value every time it changes hands without a record. SupplyChain keeps the chain
+                short, visible and accountable — so farmers earn more and buyers know exactly what they are eating.
+            </p>
+            <ul class="check-list">
+                <li>
+                    <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-check"></use></svg>
+                    Farm-gate pricing with transparent margins at every stage.
+                </li>
+                <li>
+                    <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-check"></use></svg>
+                    Custody records for every lot, from harvest to checkout.
+                </li>
+                <li>
+                    <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-check"></use></svg>
+                    Less produce lost between farm, market and kitchen.
+                </li>
+                <li>
+                    <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-check"></use></svg>
+                    One account for farmers, distributors, retailers and customers.
+                </li>
+            </ul>
+            <div class="hero-actions">
+                <a class="btn btn-primary" asp-controller="Home" asp-action="About">Read our story</a>
+                <a class="btn btn-outline" asp-controller="Home" asp-action="Contact">Talk to us</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="cta-band reveal">
+            <div class="row-between wrap" style="align-items:flex-end">
+                <div>
+                    <span class="eyebrow" style="color:#f0c07a">Join the chain</span>
+                    <h2>Your next harvest deserves a bigger market.</h2>
+                    <p>Create a free account, list what you grow, and reach distributors, retailers and homes across Nigeria.</p>
+                </div>
+                <div class="hero-actions" style="margin-top:0">
+                    <a class="btn btn-primary btn-lg" asp-controller="Auth" asp-action="Register">Create free account</a>
+                    <a class="btn btn-outline btn-lg" asp-controller="Auth" asp-action="Login">Sign in</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

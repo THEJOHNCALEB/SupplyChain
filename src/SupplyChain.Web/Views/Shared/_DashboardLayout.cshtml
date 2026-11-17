@@ -1,0 +1,176 @@
+@inject CurrentUser Current
+@inject ICartService Cart
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
+@{
+    var viewer = await Current.GetAsync();
+    var cartCount = viewer?.Role == UserRole.Customer ? await Cart.GetCountAsync(viewer.Id) : 0;
+    var path = Context.Request.Path.Value ?? "/";
+    var title = ViewData["Title"] as string ?? "Dashboard";
+    var description = ViewData["Description"] as string
+        ?? "Manage your SupplyChain account, inventory and orders.";
+    var isSeller = viewer?.Role is UserRole.Farmer or UserRole.Distributor or UserRole.Retailer;
+    var isAdmin = viewer?.Role == UserRole.Admin;
+    string? Active(string prefix, bool exact = false) =>
+        exact ? (path == prefix ? "is-active" : null) : (path.StartsWith(prefix) ? "is-active" : null);
+}
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@title · SupplyChain</title>
+    <meta name="description" content="@description" />
+    <meta name="theme-color" content="#20553a" />
+    <meta name="csrf-token" content="@Antiforgery.GetAndStoreTokens(Context).RequestToken" />
+    <link rel="icon" href="~/favicon.ico" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/app.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="dash-shell">
+        <div class="sidebar-scrim" data-sidebar-scrim></div>
+        <aside class="sidebar" data-sidebar aria-label="Account navigation">
+            <a class="brand" asp-controller="Home" asp-action="Index">
+                <span class="brand-mark">
+                    <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-sprout"></use></svg>
+                </span>
+                <span class="brand-text">SupplyChain<small>farm to doorstep</small></span>
+            </a>
+
+            <nav class="sidebar-section" aria-label="Workspace">
+                <span class="sidebar-label">Workspace</span>
+                <a class="nav-item @Active("/dashboard", true)" asp-controller="Dashboard" asp-action="Index">
+                    <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-grid"></use></svg>
+                    Overview
+                </a>
+                <a class="nav-item @Active("/marketplace")" asp-controller="Marketplace" asp-action="Index">
+                    <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-basket"></use></svg>
+                    Marketplace
+                </a>
+                @if (isSeller)
+                {
+                    <a class="nav-item @Active("/dashboard/products")" asp-controller="Dashboard" asp-action="Products">
+                        <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-package"></use></svg>
+                        Inventory
+                    </a>
+                    <a class="nav-item @Active("/dashboard/sales")" asp-controller="Dashboard" asp-action="Sales">
+                        <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-chart"></use></svg>
+                        Sales
+                    </a>
+                }
+                @if (viewer?.Role == UserRole.Customer)
+                {
+                    <a class="nav-item @Active("/cart")" asp-controller="Cart" asp-action="Index">
+                        <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-cart"></use></svg>
+                        Cart
+                        @if (cartCount > 0)
+                        {
+                            <span class="badge badge-warn">@cartCount</span>
+                        }
+                    </a>
+                    <a class="nav-item @Active("/orders")" asp-controller="Orders" asp-action="Index">
+                        <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-truck"></use></svg>
+                        My orders
+                    </a>
+                }
+                @if (isAdmin)
+                {
+                    <a class="nav-item @Active("/admin/users")" asp-controller="Admin" asp-action="Users">
+                        <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-users"></use></svg>
+                        People
+                    </a>
+                    <a class="nav-item @Active("/admin/orders")" asp-controller="Admin" asp-action="Orders">
+                        <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-layers"></use></svg>
+                        All orders
+                    </a>
+                }
+            </nav>
+
+            <div class="sidebar-section">
+                <span class="sidebar-label">Account</span>
+                <a class="nav-item @Active("/profile")" asp-controller="Profile" asp-action="Index">
+                    <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-settings"></use></svg>
+                    Profile settings
+                </a>
+                <a class="nav-item" asp-controller="Home" asp-action="Index">
+                    <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-store"></use></svg>
+                    View storefront
+                </a>
+            </div>
+
+            <div class="sidebar-foot">
+                @if (viewer is not null)
+                {
+                    <div class="sidebar-user">
+                        @if (!string.IsNullOrWhiteSpace(viewer.AvatarUrl))
+                        {
+                            <img class="avatar avatar-sm" src="@viewer.AvatarUrl" alt="@viewer.DisplayName" />
+                        }
+                        else
+                        {
+                            <span class="avatar-fallback">@viewer.Initials</span>
+                        }
+                        <div class="grow">
+                            <strong>@viewer.DisplayName</strong>
+                            <span>@(string.IsNullOrWhiteSpace(viewer.StoreName) ? viewer.Role.ToDisplay() : viewer.StoreName)</span>
+                        </div>
+                    </div>
+                }
+                <form method="post" asp-controller="Auth" asp-action="Logout">
+                    @Html.AntiForgeryToken()
+                    <button class="btn btn-outline btn-block btn-sm" type="submit">
+                        <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-logout"></use></svg>
+                        Sign out
+                    </button>
+                </form>
+            </div>
+        </aside>
+
+        <div class="dash-main">
+            <header class="topbar">
+                <button class="btn-icon plain sidebar-toggle" type="button" data-sidebar-toggle aria-expanded="false" aria-label="Open navigation">
+                    <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-menu"></use></svg>
+                </button>
+                <h1>@title</h1>
+                <div class="topbar-actions">
+                    <button class="btn-icon plain" type="button" data-theme-toggle aria-label="Switch colour mode">
+                        <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-moon"></use></svg>
+                    </button>
+                    @if (viewer?.Role == UserRole.Customer)
+                    {
+                        <a class="btn-icon cart-link" asp-controller="Cart" asp-action="Index" aria-label="Your cart">
+                            <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-cart"></use></svg>
+                            <span class="cart-count" data-cart-count hidden="@(cartCount == 0)">@cartCount</span>
+                        </a>
+                    }
+                    <a class="user-chip" asp-controller="Profile" asp-action="Index">
+                        @if (viewer is not null && !string.IsNullOrWhiteSpace(viewer.AvatarUrl))
+                        {
+                            <img class="avatar avatar-sm" src="@viewer.AvatarUrl" alt="@viewer.DisplayName" />
+                        }
+                        else
+                        {
+                            <span class="avatar-fallback">@(viewer?.Initials ?? "SC")</span>
+                        }
+                        <span>
+                            @(viewer?.FirstName ?? "Account")
+                            <span class="role">@(viewer?.Role.ToDisplay() ?? "Member")</span>
+                        </span>
+                    </a>
+                </div>
+            </header>
+
+            @await Html.PartialAsync("_Toasts")
+
+            <main class="dash-content" id="main">
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+
+    <script src="~/js/app.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

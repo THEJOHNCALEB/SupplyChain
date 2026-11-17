@@ -1,0 +1,133 @@
+@model CheckoutViewModel
+@{
+    ViewData["Title"] = "Checkout";
+}
+
+<section class="page-head">
+    <div class="container">
+        <div class="breadcrumb">
+            <a asp-controller="Home" asp-action="Index">Home</a>
+            <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-chevron-right"></use></svg>
+            <a asp-controller="Cart" asp-action="Index">Cart</a>
+            <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-chevron-right"></use></svg>
+            <span>Checkout</span>
+        </div>
+        <span class="eyebrow">Almost there</span>
+        <h1>Where should we bring it?</h1>
+        <p class="lead">Confirm your delivery details. Sellers are notified as soon as the order is placed.</p>
+    </div>
+</section>
+
+<section class="section-tight">
+    <div class="container">
+        <form method="post" asp-controller="Cart" asp-action="Checkout" class="checkout-grid" novalidate>
+            @Html.AntiForgeryToken()
+            <div class="panel card-pad">
+                <div asp-validation-summary="ModelOnly"></div>
+
+                <h3 style="font-size:1.2rem">Delivery details</h3>
+                <p class="text-sm text-muted mb-3">We'll use these to hand the order to the seller and courier.</p>
+
+                <div class="field">
+                    <label asp-for="ShippingName"></label>
+                    <input class="input" asp-for="ShippingName" autocomplete="name" placeholder="Dayo Adeyemi" />
+                    <span asp-validation-for="ShippingName" class="validation"></span>
+                </div>
+
+                <div class="field-row">
+                    <div class="field">
+                        <label asp-for="ShippingPhone"></label>
+                        <input class="input" asp-for="ShippingPhone" type="tel" autocomplete="tel" placeholder="0803 555 0142" />
+                        <span asp-validation-for="ShippingPhone" class="validation"></span>
+                    </div>
+                    <div class="field">
+                        <label asp-for="ShippingCity"></label>
+                        <input class="input" asp-for="ShippingCity" autocomplete="address-level2" placeholder="Ibadan" />
+                        <span asp-validation-for="ShippingCity" class="validation"></span>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label asp-for="ShippingAddress"></label>
+                    <input class="input" asp-for="ShippingAddress" autocomplete="street-address" placeholder="12 Bodija Estate Road" />
+                    <span asp-validation-for="ShippingAddress" class="validation"></span>
+                </div>
+
+                <div class="field">
+                    <label asp-for="ShippingState"></label>
+                    <input class="input" asp-for="ShippingState" autocomplete="address-level1" placeholder="Oyo" />
+                    <span asp-validation-for="ShippingState" class="validation"></span>
+                </div>
+
+                <div class="field">
+                    <label asp-for="Notes">Delivery note <span class="text-muted">(optional)</span></label>
+                    <textarea class="textarea" asp-for="Notes" rows="2" placeholder="Landmark, gate code, preferred delivery window…"></textarea>
+                </div>
+
+                <h3 style="font-size:1.2rem;margin-top:1.5rem">Payment</h3>
+                <div class="pay-methods">
+                    <label class="pay-option">
+                        <input asp-for="PaymentMethod" type="radio" value="Cash on delivery" checked="@(Model.PaymentMethod == "Cash on delivery")" />
+                        <span>
+                            <svg class="icon icon-lg" aria-hidden="true"><use href="/media/icons.svg#i-wallet"></use></svg>
+                            <span>
+                                Cash on delivery
+                                <small>Pay the courier when your produce arrives.</small>
+                            </span>
+                        </span>
+                    </label>
+                    <label class="pay-option">
+                        <input asp-for="PaymentMethod" type="radio" value="Card" checked="@(Model.PaymentMethod == "Card")" />
+                        <span>
+                            <svg class="icon icon-lg" aria-hidden="true"><use href="/media/icons.svg#i-card"></use></svg>
+                            <span>
+                                Card payment
+                                <small>Marked as paid immediately. Demo only — no card is charged.</small>
+                            </span>
+                        </span>
+                    </label>
+                </div>
+
+                <button class="btn btn-primary btn-block btn-lg mt-3" type="submit">
+                    <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-lock"></use></svg>
+                    Place order · ₦@Model.Total.ToString("N0")
+                </button>
+            </div>
+
+            <div class="card card-pad summary-card">
+                <h3 style="font-size:1.2rem">Your order</h3>
+                @foreach (var item in Model.Items)
+                {
+                    <div class="mini-line">
+                        <img src="@(item.Product?.ImageUrl ?? "/media/produce/yam.svg")" alt="@(item.Product?.Name ?? "Produce")" />
+                        <div class="grow">
+                            <strong>@(item.Product?.Name ?? "Produce")</strong>
+                            <span>@item.Quantity × ₦@item.UnitPrice.ToString("N0")</span>
+                        </div>
+                        <strong class="mono">₦@item.LineTotal.ToString("N0")</strong>
+                    </div>
+                }
+                <div class="summary-row mt-2">
+                    <span>Subtotal</span>
+                    <strong>₦@Model.Subtotal.ToString("N0")</strong>
+                </div>
+                <div class="summary-row">
+                    <span>Delivery</span>
+                    <strong>@(Model.DeliveryFee == 0 ? "Free" : $"₦{Model.DeliveryFee:N0}")</strong>
+                </div>
+                <div class="summary-total">
+                    <span>Total</span>
+                    <strong>₦@Model.Total.ToString("N0")</strong>
+                </div>
+                <div class="info-strip" style="border-radius:var(--radius-sm)">
+                    <span><svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-shield"></use></svg> Traceable</span>
+                    <span><svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-refresh"></use></svg> Easy returns</span>
+                </div>
+                <a class="btn btn-ghost btn-block btn-sm mt-2" asp-controller="Cart" asp-action="Index">
+                    <svg class="icon" aria-hidden="true" style="transform:rotate(180deg)"><use href="/media/icons.svg#i-arrow-right"></use></svg>
+                    Back to cart
+                </a>
+            </div>
+        </form>
+    </div>
+</section>

@@ -1,0 +1,11 @@
+@model ProductFormViewModel
+@{
+    ViewData["Title"] = "New listing";
+    ViewData["FormAction"] = "/dashboard/products/new";
+    ViewData["FormTitle"] = "List a harvest";
+    ViewData["FormIntro"] = "Tell buyers what you're growing, how much is available and what it costs. Clear photos sell faster.";
+    ViewData["SubmitLabel"] = "Publish listing";
+    ViewData["IsEdit"] = false;
+}
+
+<partial name="_ProductForm" model="Model" />

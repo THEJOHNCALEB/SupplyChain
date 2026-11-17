@@ -1,0 +1,67 @@
+# ---------- .NET ----------
+bin/
+obj/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.userprefs
+project.lock.json
+project.fragment.lock.json
+artifacts/
+.vs/
+.vscode/
+.idea/
+*.DotSettings.user
+
+# ---------- Test / coverage ----------
+TestResults/
+coverage/
+*.coverage
+*.coveragexml
+coverage*.json
+coverage*.xml
+
+# ---------- Runtime / data ----------
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+app.db
+SupplyChain.db
+logs/
+*.log
+
+# ---------- Secrets / local config ----------
+.env
+.env.*
+!.env.example
+appsettings.Local.json
+*.pfx
+*.p12
+secrets.json
+
+# ---------- Uploads ----------
+wwwroot/uploads/*
+!wwwroot/uploads/products/
+!wwwroot/uploads/avatars/
+wwwroot/uploads/products/*
+!wwwroot/uploads/products/demo/
+wwwroot/uploads/avatars/*
+!wwwroot/uploads/avatars/demo/
+
+# ---------- OS / editor ----------
+.DS_Store
+Thumbs.db
+*.swp
+*~
+
+# ---------- Scratch / temp ----------
+assets_tmp/

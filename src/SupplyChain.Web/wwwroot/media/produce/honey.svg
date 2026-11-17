@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="Jar of raw wildflower honey">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#F8E8C4"/>
+      <stop offset="1" stop-color="#DDB25E"/>
+    </linearGradient>
+    <linearGradient id="honey" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F2B53C"/>
+      <stop offset="1" stop-color="#C47A12"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#bg)"/>
+  <circle cx="650" cy="110" r="185" fill="#FFF9EB" opacity=".5"/>
+  <circle cx="120" cy="520" r="160" fill="#A97A22" opacity=".13"/>
+  <ellipse cx="400" cy="512" rx="220" ry="36" fill="#7E5A14" opacity=".17"/>
+  <g>
+    <path d="M300 250h200v196c0 26-20 44-46 44H346c-26 0-46-18-46-44V250Z" fill="url(#honey)"/>
+    <path d="M300 250c50-18 150-18 200 0v40c-50 18-150 18-200 0v-40Z" fill="#F7CE6B"/>
+    <rect x="286" y="218" width="228" height="40" rx="12" fill="#5E4520"/>
+    <rect x="300" y="258" width="200" height="150" rx="6" fill="#FFF9EB" opacity=".22"/>
+    <g fill="#FFF9EB" opacity=".7">
+      <circle cx="340" cy="300" r="7"/><circle cx="374" cy="296" r="7"/><circle cx="408" cy="302" r="7"/>
+      <circle cx="442" cy="296" r="7"/><circle cx="476" cy="302" r="7"/>
+      <circle cx="340" cy="336" r="7"/><circle cx="374" cy="332" r="7"/><circle cx="408" cy="338" r="7"/>
+      <circle cx="442" cy="332" r="7"/><circle cx="476" cy="338" r="7"/>
+    </g>
+    <path d="M400 218c-26-52-88-64-124-88 38 10 82 26 108 56" fill="#6E9E4D" opacity=".75"/>
+    <path d="M400 218c26-52 88-64 124-88-38 10-82 26-108 56" fill="#5B8F45" opacity=".75"/>
+    <rect x="330" y="440" width="140" height="26" rx="6" fill="#F7CE6B" opacity=".55"/>
+  </g>
+  <g fill="#C47A12" opacity=".45">
+    <ellipse cx="256" cy="470" rx="16" ry="8" transform="rotate(-20 256 470)"/>
+    <ellipse cx="552" cy="468" rx="14" ry="7" transform="rotate(16 552 468)"/>
+  </g>
+</svg>

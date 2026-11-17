@@ -1,0 +1,45 @@
+@{
+    ViewData["Title"] = "Privacy";
+}
+
+<section class="page-head">
+    <div class="container container-narrow">
+        <div class="breadcrumb">
+            <a asp-controller="Home" asp-action="Index">Home</a>
+            <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-chevron-right"></use></svg>
+            <span>Privacy</span>
+        </div>
+        <span class="eyebrow">Your data</span>
+        <h1>Privacy, plainly stated.</h1>
+        <p class="lead">We collect only what the marketplace needs to work, and we never sell your personal data.</p>
+    </div>
+</section>
+
+<section class="section-tight">
+    <div class="container container-narrow prose">
+        <h2>What we collect</h2>
+        <p>Account details you provide — name, email, username, phone number, business name, delivery address and a profile photo if you upload one. We also store the listings, orders and custody records you create.</p>
+
+        <h2>Why we collect it</h2>
+        <ul>
+            <li>To sign you in and keep your account secure.</li>
+            <li>To show buyers and sellers the information needed to trade.</li>
+            <li>To fulfil orders and maintain a traceable custody record.</li>
+            <li>To improve the marketplace and prevent abuse.</li>
+        </ul>
+
+        <h2>What we don't do</h2>
+        <p>We do not sell personal data, run third-party advertising trackers, or share your contact details with other users unless you choose to include them in a listing or order.</p>
+
+        <h2>Passwords</h2>
+        <p>Passwords are hashed with PBKDF2-HMAC-SHA256 and a per-user salt. Plain-text passwords are never stored or logged.</p>
+
+        <h2>Your choices</h2>
+        <p>You can update your profile, change your password and remove optional details at any time from your account settings. To close your account, contact us.</p>
+
+        <h2>Contact</h2>
+        <p>Questions about privacy? Email <a href="mailto:privacy@supplychain.dev">privacy@supplychain.dev</a>.</p>
+
+        <p class="footer-note mt-4">Last updated: @DateTime.UtcNow.ToString("MMMM yyyy").</p>
+    </div>
+</section>

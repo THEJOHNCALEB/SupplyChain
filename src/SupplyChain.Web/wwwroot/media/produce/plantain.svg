@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="Bunch of sweet plantain">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#F4F2C9"/>
+      <stop offset="1" stop-color="#CFCB78"/>
+    </linearGradient>
+    <linearGradient id="plant" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F2D45A"/>
+      <stop offset="1" stop-color="#BFA02C"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#bg)"/>
+  <circle cx="650" cy="110" r="185" fill="#FFFEF3" opacity=".5"/>
+  <circle cx="120" cy="520" r="160" fill="#A69A35" opacity=".14"/>
+  <ellipse cx="400" cy="512" rx="240" ry="36" fill="#7E731E" opacity=".16"/>
+  <g transform="rotate(-8 400 350)">
+    <g fill="url(#plant)">
+      <path d="M262 300c20-62 86-96 154-76 34 10 52 38 30 62-24 26-82 42-128 40-30-2-64-8-56-26Z"/>
+      <path d="M286 350c26-58 94-86 160-60 32 12 46 42 22 64-26 24-84 34-128 28-30-4-62-14-54-32Z"/>
+      <path d="M326 400c32-52 102-72 164-42 30 14 40 46 14 64-28 20-86 26-128 16-28-6-58-20-50-38Z"/>
+      <path d="M300 252c8-52 62-86 124-76 30 6 48 30 30 50-20 22-70 36-110 36-26 0-48-2-44-10Z"/>
+    </g>
+    <g fill="#8A7418" opacity=".25">
+      <ellipse cx="380" cy="306" rx="10" ry="4" transform="rotate(-10 380 306)"/>
+      <ellipse cx="404" cy="356" rx="10" ry="4" transform="rotate(-6 404 356)"/>
+      <ellipse cx="444" cy="406" rx="10" ry="4" transform="rotate(-2 444 406)"/>
+    </g>
+    <path d="M560 300c44-6 84 6 112 38" fill="none" stroke="#7E8C3A" stroke-width="12" stroke-linecap="round"/>
+    <path d="M672 338c26-4 52 6 70 28" fill="none" stroke="#6E7A30" stroke-width="10" stroke-linecap="round"/>
+  </g>
+  <g fill="#7E8C3A" opacity=".8">
+    <ellipse cx="230" cy="200" rx="30" ry="10" transform="rotate(-32 230 200)"/>
+  </g>
+</svg>

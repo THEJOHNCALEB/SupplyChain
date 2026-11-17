@@ -1,0 +1,145 @@
+@model CartViewModel
+@{
+    ViewData["Title"] = "Your cart";
+    var toFreeDelivery = PricingRules.FreeDeliveryThreshold - Model.Subtotal;
+}
+
+<section class="page-head">
+    <div class="container">
+        <div class="breadcrumb">
+            <a asp-controller="Home" asp-action="Index">Home</a>
+            <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-chevron-right"></use></svg>
+            <span>Cart</span>
+        </div>
+        <div class="row-between wrap">
+            <div>
+                <span class="eyebrow">Basket</span>
+                <h1>Your fresh basket.</h1>
+                <p class="lead">Review what you're buying, adjust quantities, then head to checkout.</p>
+            </div>
+            <a class="btn btn-outline" asp-controller="Marketplace" asp-action="Index">
+                <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-basket"></use></svg>
+                Keep shopping
+            </a>
+        </div>
+    </div>
+</section>
+
+<section class="section-tight">
+    <div class="container">
+        @if (Model.Items.Count > 0)
+        {
+            <div class="cart-grid">
+                <div class="panel">
+                    <div class="panel-head">
+                        <h4>@Model.Items.Count item@(Model.Items.Count == 1 ? "" : "s")</h4>
+                        <form method="post" asp-controller="Cart" asp-action="Clear" onsubmit="return confirm('Empty your cart?');">
+                            @Html.AntiForgeryToken()
+                            <button class="btn btn-ghost btn-sm" type="submit">
+                                <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-trash"></use></svg>
+                                Clear cart
+                            </button>
+                        </form>
+                    </div>
+                    <div class="panel-body flush">
+                        @foreach (var item in Model.Items)
+                        {
+                            var product = item.Product;
+                            <div class="cart-line">
+                                <a asp-controller="Marketplace" asp-action="Details" asp-route-id="@item.ProductId">
+                                    <img src="@(product?.ImageUrl ?? "/media/produce/yam.svg")" alt="@(product?.Name ?? "Produce")" />
+                                </a>
+                                <div>
+                                    <h4>
+                                        <a asp-controller="Marketplace" asp-action="Details" asp-route-id="@item.ProductId">
+                                            @(product?.Name ?? "Produce")
+                                        </a>
+                                    </h4>
+                                    <div class="seller">
+                                        @(product?.Owner?.StoreName is { Length: > 0 } store ? store : product?.Owner?.DisplayName ?? "Seller")
+                                        · ₦@item.UnitPrice.ToString("N0") / @(product?.Unit ?? "unit")
+                                    </div>
+                                    @if (product is not null && item.Quantity > product.Quantity)
+                                    {
+                                        <div class="text-xs mt-1" style="color:var(--danger)">
+                                            Only @product.Quantity @product.Unit remain — reduce the quantity.
+                                        </div>
+                                    }
+                                    <form method="post" asp-controller="Cart" asp-action="Update" class="mt-2">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@item.Id" />
+                                        <div class="stepper" data-autosubmit>
+                                            <button type="button" data-step="-1" aria-label="Decrease quantity">
+                                                <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-minus"></use></svg>
+                                            </button>
+                                            <input type="number" name="quantity" value="@item.Quantity" min="1" max="@Math.Max(product?.Quantity ?? 99, 1)" aria-label="Quantity for @(product?.Name ?? "item")" />
+                                            <button type="button" data-step="1" aria-label="Increase quantity">
+                                                <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-plus"></use></svg>
+                                            </button>
+                                        </div>
+                                        <noscript><button class="btn btn-outline btn-sm mt-1" type="submit">Update</button></noscript>
+                                    </form>
+                                </div>
+                                <div class="cart-line-actions">
+                                    <div class="cart-line-total">₦@item.LineTotal.ToString("N0")</div>
+                                    <form method="post" asp-controller="Cart" asp-action="Remove">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@item.Id" />
+                                        <button class="btn btn-ghost btn-sm" type="submit">
+                                            <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-trash"></use></svg>
+                                            Remove
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="card card-pad summary-card">
+                    <h3 style="font-size:1.2rem">Order summary</h3>
+                    @if (Model.DeliveryFee == 0)
+                    {
+                        <div class="free-delivery">
+                            <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-truck"></use></svg>
+                            You've unlocked free delivery.
+                        </div>
+                    }
+                    else if (toFreeDelivery > 0)
+                    {
+                        <div class="callout mb-2">
+                            <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-info"></use></svg>
+                            Add ₦@toFreeDelivery.ToString("N0") more for free delivery.
+                        </div>
+                    }
+                    <div class="summary-row">
+                        <span>Subtotal</span>
+                        <strong>₦@Model.Subtotal.ToString("N0")</strong>
+                    </div>
+                    <div class="summary-row">
+                        <span>Delivery</span>
+                        <strong>@(Model.DeliveryFee == 0 ? "Free" : $"₦{Model.DeliveryFee:N0}")</strong>
+                    </div>
+                    <div class="summary-total">
+                        <span>Total</span>
+                        <strong>₦@Model.Total.ToString("N0")</strong>
+                    </div>
+                    <a class="btn btn-primary btn-block btn-lg" asp-controller="Cart" asp-action="Checkout">
+                        Checkout
+                        <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-arrow-right"></use></svg>
+                    </a>
+                    <p class="help text-center mt-2 mb-0">Cash on delivery and card payment accepted.</p>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="empty-state">
+                <span class="icon-badge"><svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-cart"></use></svg></span>
+                <h3>Your basket is empty</h3>
+                <p>Fresh yams, tomatoes, rice and more are waiting in the marketplace.</p>
+                <a class="btn btn-primary" asp-controller="Marketplace" asp-action="Index">Start shopping</a>
+            </div>
+        }
+    </div>
+</section>

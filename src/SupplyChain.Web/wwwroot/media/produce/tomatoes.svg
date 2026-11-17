@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="Roma tomatoes">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FCE7DC"/>
+      <stop offset="1" stop-color="#EFB5A1"/>
+    </linearGradient>
+    <radialGradient id="tom" cx=".35" cy=".3" r=".85">
+      <stop offset="0" stop-color="#F5654E"/>
+      <stop offset="1" stop-color="#C22B23"/>
+    </radialGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#bg)"/>
+  <circle cx="650" cy="110" r="185" fill="#FFF7F2" opacity=".5"/>
+  <circle cx="120" cy="520" r="160" fill="#C84A37" opacity=".12"/>
+  <ellipse cx="400" cy="512" rx="240" ry="36" fill="#9C3325" opacity=".16"/>
+  <g>
+    <ellipse cx="300" cy="340" rx="112" ry="104" fill="url(#tom)"/>
+    <path d="M300 244c-8-18-2-34 10-46 6 16 8 30 0 46Z" fill="#4E7A3B"/>
+    <g fill="#5C8F43">
+      <path d="M300 248c-20-13-44-12-58 0 18 7 36 9 58 0Z"/>
+      <path d="M300 248c20-13 44-12 58 0-18 7-36 9-58 0Z"/>
+      <path d="M300 248c-10-20-8-40 2-54 5 18 6 36-2 54Z"/>
+    </g>
+    <ellipse cx="505" cy="372" rx="104" ry="96" fill="#D8402F"/>
+    <path d="M505 280c-8-18-2-32 10-44 6 16 6 30-2 44Z" fill="#4E7A3B"/>
+    <g fill="#5C8F43">
+      <path d="M505 284c-18-12-40-11-52 0 16 6 32 8 52 0Z"/>
+      <path d="M505 284c18-12 40-11 52 0-16 6-32 8-52 0Z"/>
+    </g>
+    <ellipse cx="432" cy="252" rx="86" ry="80" fill="#EE5A44"/>
+    <g fill="#5C8F43">
+      <path d="M432 178c-15-10-34-9-44 0 13 5 27 6 44 0Z"/>
+      <path d="M432 178c15-10 34-9 44 0-13 5-27 6-44 0Z"/>
+      <path d="M432 178c-6-14-4-26 4-36 4 12 4 24-4 36Z"/>
+    </g>
+  </g>
+  <g fill="#FFF" opacity=".28">
+    <ellipse cx="262" cy="300" rx="26" ry="14" transform="rotate(-28 262 300)"/>
+    <ellipse cx="472" cy="334" rx="22" ry="12" transform="rotate(-28 472 334)"/>
+    <ellipse cx="404" cy="222" rx="18" ry="10" transform="rotate(-28 404 222)"/>
+  </g>
+  <path d="M388 198c50-38 104-38 150 0" fill="none" stroke="#5C8F43" stroke-width="7" stroke-linecap="round" opacity=".7"/>
+  <path d="M198 252c50-38 100-38 144 0" fill="none" stroke="#5C8F43" stroke-width="7" stroke-linecap="round" opacity=".55"/>
+</svg>

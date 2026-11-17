@@ -1,0 +1,163 @@
+@inject CurrentUser Current
+@inject ICartService Cart
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
+@{
+    var viewer = User.Identity?.IsAuthenticated == true ? await Current.GetAsync() : null;
+    var cartCount = viewer?.Role == UserRole.Customer ? await Cart.GetCountAsync(viewer.Id) : 0;
+    var path = Context.Request.Path.Value ?? "/";
+    var title = ViewData["Title"] as string;
+    var pageTitle = string.IsNullOrWhiteSpace(title) ? "SupplyChain" : $"{title} · SupplyChain";
+    var description = ViewData["Description"] as string
+        ?? "Source, move and sell traceable agricultural produce from Nigerian farms to doorsteps.";
+    var bodyClass = ViewData["BodyClass"] as string ?? string.Empty;
+}
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@pageTitle</title>
+    <meta name="description" content="@description" />
+    <meta name="theme-color" content="#20553a" />
+    <meta name="csrf-token" content="@Antiforgery.GetAndStoreTokens(Context).RequestToken" />
+    <link rel="icon" href="~/favicon.ico" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/app.css" asp-append-version="true" />
+</head>
+<body class="@bodyClass">
+    <header class="site-header" data-header>
+        <div class="nav">
+            <a class="brand" asp-controller="Home" asp-action="Index">
+                <span class="brand-mark">
+                    <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-sprout"></use></svg>
+                </span>
+                <span class="brand-text">SupplyChain<small>farm to doorstep</small></span>
+            </a>
+
+            <nav class="nav-links" data-nav aria-label="Main navigation">
+                <a asp-controller="Marketplace" asp-action="Index" class="@(path.StartsWith("/marketplace") ? "is-active" : null)">Marketplace</a>
+                <a asp-controller="Home" asp-action="Index" asp-fragment="how" class="@(path == "/" ? null : null)">How it works</a>
+                <a asp-controller="Home" asp-action="About" class="@(path.StartsWith("/about") ? "is-active" : null)">About</a>
+                <a asp-controller="Home" asp-action="Contact" class="@(path.StartsWith("/contact") ? "is-active" : null)">Contact</a>
+                @if (viewer is not null)
+                {
+                    <a asp-controller="Dashboard" asp-action="Index" class="@(path.StartsWith("/dashboard") ? "is-active" : null)">Dashboard</a>
+                }
+            </nav>
+
+            <div class="nav-actions">
+                <button class="btn-icon plain" type="button" data-theme-toggle aria-label="Switch colour mode">
+                    <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-moon"></use></svg>
+                </button>
+
+                @if (viewer is not null)
+                {
+                    @if (viewer.Role == UserRole.Customer)
+                    {
+                        <a class="btn-icon cart-link" asp-controller="Cart" asp-action="Index" aria-label="Your cart">
+                            <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-cart"></use></svg>
+                            <span class="cart-count" data-cart-count hidden="@(cartCount == 0)">@cartCount</span>
+                        </a>
+                    }
+                    <a class="user-chip" asp-controller="Profile" asp-action="Index">
+                        @if (!string.IsNullOrWhiteSpace(viewer.AvatarUrl))
+                        {
+                            <img class="avatar avatar-sm" src="@viewer.AvatarUrl" alt="@viewer.DisplayName" />
+                        }
+                        else
+                        {
+                            <span class="avatar-fallback">@viewer.Initials</span>
+                        }
+                        <span>
+                            @viewer.FirstName
+                            <span class="role">@viewer.Role.ToDisplay()</span>
+                        </span>
+                    </a>
+                    <form method="post" asp-controller="Auth" asp-action="Logout">
+                        @Html.AntiForgeryToken()
+                        <button class="btn-icon plain" type="submit" aria-label="Sign out">
+                            <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-logout"></use></svg>
+                        </button>
+                    </form>
+                }
+                else
+                {
+                    <a class="btn btn-ghost" asp-controller="Auth" asp-action="Login">Sign in</a>
+                    <a class="btn btn-primary" asp-controller="Auth" asp-action="Register">Get started</a>
+                }
+
+                <button class="btn-icon plain nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-label="Open menu">
+                    <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-menu"></use></svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    @await Html.PartialAsync("_Toasts")
+
+    <main id="main">
+        @RenderBody()
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a class="brand" asp-controller="Home" asp-action="Index">
+                        <span class="brand-mark">
+                            <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-sprout"></use></svg>
+                        </span>
+                        <span class="brand-text">SupplyChain<small>farm to doorstep</small></span>
+                    </a>
+                    <p>A traceable agricultural marketplace connecting Nigerian farms, distributors, retailers and homes.</p>
+                    <div class="socials">
+                        <a class="btn-icon" href="#" aria-label="Instagram"><svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-instagram"></use></svg></a>
+                        <a class="btn-icon" href="#" aria-label="Twitter"><svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-twitter"></use></svg></a>
+                        <a class="btn-icon" href="#" aria-label="LinkedIn"><svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-linkedin"></use></svg></a>
+                    </div>
+                </div>
+                <div>
+                    <h5>Marketplace</h5>
+                    <ul>
+                        <li><a asp-controller="Marketplace" asp-action="Index">All produce</a></li>
+                        <li><a asp-controller="Marketplace" asp-action="Index" asp-route-category="Tubers">Tubers</a></li>
+                        <li><a asp-controller="Marketplace" asp-action="Index" asp-route-category="Grains">Grains</a></li>
+                        <li><a asp-controller="Marketplace" asp-action="Index" asp-route-category="Vegetables">Vegetables</a></li>
+                        <li><a asp-controller="Marketplace" asp-action="Index" asp-route-category="Fruits">Fruits</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5>Company</h5>
+                    <ul>
+                        <li><a asp-controller="Home" asp-action="About">About us</a></li>
+                        <li><a asp-controller="Home" asp-action="Contact">Contact</a></li>
+                        <li><a asp-controller="Home" asp-action="Privacy">Privacy</a></li>
+                        <li><a href="https://github.com/THEJOHNCALEB/SupplyChain" target="_blank" rel="noopener">Open source</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5>Get started</h5>
+                    <ul>
+                        <li><a asp-controller="Auth" asp-action="Register" asp-route-role="Farmer">Sell as a farmer</a></li>
+                        <li><a asp-controller="Auth" asp-action="Register" asp-route-role="Distributor">Distribute produce</a></li>
+                        <li><a asp-controller="Auth" asp-action="Register" asp-route-role="Retailer">Stock your store</a></li>
+                        <li><a asp-controller="Auth" asp-action="Register" asp-route-role="Customer">Shop fresh</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span>&copy; @DateTime.UtcNow.Year SupplyChain. Built by John Caleb. Open source under the MIT licence.</span>
+                <span class="row" style="gap:.4rem">
+                    <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-leaf"></use></svg>
+                    Grown, moved and sold with care.
+                </span>
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/js/app.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

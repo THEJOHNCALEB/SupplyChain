@@ -1,0 +1,67 @@
+@inject CurrentUser Current
+@model Product
+@{
+    var viewer = await Current.GetAsync();
+    var canBuy = viewer?.Role == UserRole.Customer && Model.Stage == ProductStage.Retail && Model.IsActive && Model.Quantity > 0;
+    var seller = Model.Owner?.StoreName;
+    if (string.IsNullOrWhiteSpace(seller))
+    {
+        seller = Model.Owner?.DisplayName ?? "Verified seller";
+    }
+    var returnUrl = $"{Context.Request.Path}{Context.Request.QueryString}";
+}
+<article class="product-card reveal">
+    <div class="product-media">
+        <a asp-controller="Marketplace" asp-action="Details" asp-route-id="@Model.Id" tabindex="-1" aria-hidden="true">
+            <img src="@(string.IsNullOrWhiteSpace(Model.ImageUrl) ? "/media/produce/yam.svg" : Model.ImageUrl)" alt="@Model.Name" loading="lazy" />
+        </a>
+        <span class="badge badge-forest">@Model.Category.ToDisplay()</span>
+        <button class="fav-btn" type="button" data-favourite="@Model.Id" aria-label="Save @Model.Name">
+            <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-heart"></use></svg>
+        </button>
+    </div>
+    <div class="product-body">
+        <div class="product-meta">
+            <span>@Model.Stage.ToDisplay()</span>
+            @if (!string.IsNullOrWhiteSpace(Model.Reference))
+            {
+                <span>·</span>
+                <span>@Model.Reference</span>
+            }
+        </div>
+        <h3 class="product-title">
+            <a asp-controller="Marketplace" asp-action="Details" asp-route-id="@Model.Id">@Model.Name</a>
+        </h3>
+        <div class="product-origin">
+            <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-map-pin"></use></svg>
+            <span>@(string.IsNullOrWhiteSpace(Model.Origin) ? "Nigeria" : Model.Origin)</span>
+        </div>
+        <div class="text-xs text-muted">@seller</div>
+        <div class="product-foot">
+            <div>
+                <div class="price">₦@Model.Price.ToString("N0") <small>/ @Model.Unit</small></div>
+                <div class="stock">@Model.Quantity @Model.Unit available</div>
+            </div>
+            @if (canBuy)
+            {
+                <form method="post" action="/cart/add" class="js-add-to-cart">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="productId" value="@Model.Id" />
+                    <input type="hidden" name="quantity" value="1" />
+                    <input type="hidden" name="returnUrl" value="@returnUrl" />
+                    <button class="btn-add" type="submit" data-add-button>
+                        <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-plus"></use></svg>
+                        Add
+                    </button>
+                </form>
+            }
+            else
+            {
+                <a class="btn-add" asp-controller="Marketplace" asp-action="Details" asp-route-id="@Model.Id">
+                    View
+                    <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-arrow-right"></use></svg>
+                </a>
+            }
+        </div>
+    </div>
+</article>

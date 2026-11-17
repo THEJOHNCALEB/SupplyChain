@@ -1,0 +1,247 @@
+@model ProductDetailsViewModel
+@{
+    var product = Model.Product;
+    ViewData["Title"] = product.Name;
+    ViewData["Description"] = string.IsNullOrWhiteSpace(product.Description)
+        ? $"Buy {product.Name} from {product.Origin} on SupplyChain."
+        : product.Description;
+    var seller = product.Owner?.StoreName;
+    if (string.IsNullOrWhiteSpace(seller))
+    {
+        seller = product.Owner?.DisplayName ?? "Verified seller";
+    }
+    var returnUrl = $"{Context.Request.Path}{Context.Request.QueryString}";
+}
+
+<section class="section-tight">
+    <div class="container">
+        <div class="breadcrumb">
+            <a asp-controller="Home" asp-action="Index">Home</a>
+            <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-chevron-right"></use></svg>
+            <a asp-controller="Marketplace" asp-action="Index">Marketplace</a>
+            <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-chevron-right"></use></svg>
+            <span>@product.Name</span>
+        </div>
+
+        <div class="detail-grid">
+            <div class="reveal">
+                <div class="detail-media">
+                    <img src="@(string.IsNullOrWhiteSpace(product.ImageUrl) ? "/media/produce/yam.svg" : product.ImageUrl)" alt="@product.Name" />
+                </div>
+
+                <div class="panel mt-3">
+                    <div class="panel-head">
+                        <h4>Traceability</h4>
+                        <span class="badge badge-forest">
+                            <span class="dot"></span>
+                            @Model.Transfers.Count custody @(Model.Transfers.Count == 1 ? "record" : "records")
+                        </span>
+                    </div>
+                    <div class="panel-body">
+                        @if (Model.Transfers.Count > 0)
+                        {
+                            <ol class="timeline">
+                                @foreach (var transfer in Model.Transfers.OrderBy(x => x.CreatedAt))
+                                {
+                                    <li>
+                                        <strong>
+                                            @if (transfer.FromUserId is null)
+                                            {
+                                                <span>Harvest listed by @(transfer.ToUser?.DisplayName ?? "farmer")</span>
+                                            }
+                                            else
+                                            {
+                                                <span>@(transfer.FromUser?.DisplayName ?? "Seller") → @(transfer.ToUser?.DisplayName ?? "Buyer")</span>
+                                            }
+                                        </strong>
+                                        <span>
+                                            @transfer.Quantity @product.Unit at ₦@transfer.UnitPrice.ToString("N0") ·
+                                            @transfer.CreatedAt.ToString("dd MMM yyyy")
+                                            @if (!string.IsNullOrWhiteSpace(transfer.Note))
+                                            {
+                                                <span> · @transfer.Note</span>
+                                            }
+                                        </span>
+                                    </li>
+                                }
+                            </ol>
+                        }
+                        else
+                        {
+                            <p class="text-sm text-muted mb-0">This lot is newly listed. Custody records will appear as it moves.</p>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="reveal">
+                <div class="badge-list mb-3">
+                    <span class="badge badge-forest">@product.Category.ToDisplay()</span>
+                    <span class="badge badge-warn">@product.Stage.ToDisplay()</span>
+                    @if (product.Quantity <= 0)
+                    {
+                        <span class="badge badge-danger">Sold out</span>
+                    }
+                </div>
+
+                <h1 style="font-size:clamp(2rem,4vw,3rem)">@product.Name</h1>
+                <p class="text-sm text-muted">Lot @product.Reference</p>
+
+                <div class="detail-price">
+                    <span class="price">₦@product.Price.ToString("N0")</span>
+                    <span class="text-muted">per @product.Unit</span>
+                </div>
+
+                <p>@product.Description</p>
+
+                <div class="detail-facts">
+                    <div class="fact">
+                        <span>Origin</span>
+                        <strong>@(string.IsNullOrWhiteSpace(product.Origin) ? "Nigeria" : product.Origin)</strong>
+                    </div>
+                    <div class="fact">
+                        <span>Available</span>
+                        <strong>@product.Quantity @product.Unit</strong>
+                    </div>
+                    <div class="fact">
+                        <span>Listed</span>
+                        <strong>@product.CreatedAt.ToString("dd MMM yyyy")</strong>
+                    </div>
+                    <div class="fact">
+                        <span>Next in chain</span>
+                        <strong>@(product.NextRole?.ToDisplay() ?? "Customer")</strong>
+                    </div>
+                </div>
+
+                <div class="seller-card mb-3">
+                    @if (product.Owner is not null && !string.IsNullOrWhiteSpace(product.Owner.AvatarUrl))
+                    {
+                        <img class="avatar" src="@product.Owner.AvatarUrl" alt="@product.Owner.DisplayName" />
+                    }
+                    else
+                    {
+                        <span class="avatar-fallback">@(product.Owner?.Initials ?? "SC")</span>
+                    }
+                    <div class="grow">
+                        <strong>@seller</strong>
+                        <span>@(product.Owner?.Role.ToDisplay() ?? "Seller") · @(string.IsNullOrWhiteSpace(product.Owner?.State) ? "Nigeria" : product.Owner!.State)</span>
+                    </div>
+                    @if (product.Owner?.IsVerified == true)
+                    {
+                        <span class="badge badge-success">
+                            <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-check"></use></svg>
+                            Verified
+                        </span>
+                    }
+                </div>
+
+                @if (Model.CanBuy)
+                {
+                    <form method="post" action="/cart/add" class="js-add-to-cart panel card-pad">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="productId" value="@product.Id" />
+                        <input type="hidden" name="returnUrl" value="@returnUrl" />
+                        <div class="row-between wrap">
+                            <div class="stepper">
+                                <button type="button" data-step="-1" aria-label="Decrease quantity">
+                                    <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-minus"></use></svg>
+                                </button>
+                                <input type="number" name="quantity" value="1" min="1" max="@Math.Max(product.Quantity, 1)" aria-label="Quantity" />
+                                <button type="button" data-step="1" aria-label="Increase quantity">
+                                    <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-plus"></use></svg>
+                                </button>
+                            </div>
+                            <button class="btn btn-primary btn-lg" type="submit" data-add-button>
+                                <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-cart"></use></svg>
+                                Add to cart
+                            </button>
+                        </div>
+                        <p class="help mt-2 mb-0">Delivery is ₦2,500, free on orders above ₦100,000.</p>
+                    </form>
+                }
+                else if (Model.CanAcquire)
+                {
+                    <form method="post" asp-controller="Marketplace" asp-action="Acquire" asp-route-id="@product.Id" class="panel card-pad">
+                        @Html.AntiForgeryToken()
+                        <h3 style="font-size:1.15rem;margin-bottom:0.3rem">Take custody of this lot</h3>
+                        <p class="text-sm text-muted">Acquire the full @product.Quantity @product.Unit remaining in this lot. Set the price you will sell it on for.</p>
+                        <div class="field">
+                            <label for="acquire-price">Your resale price (₦ per @product.Unit)</label>
+                            <input class="input" id="acquire-price" name="price" type="number" min="1" step="50" value="@product.Price.ToString("0")" required />
+                        </div>
+                        <div class="field">
+                            <label for="acquire-note">Note to seller <span class="text-muted">(optional)</span></label>
+                            <input class="input" id="acquire-note" name="note" placeholder="Pickup window, transport details…" />
+                        </div>
+                        <button class="btn btn-primary btn-block btn-lg" type="submit">
+                            <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-layers"></use></svg>
+                            Acquire lot
+                        </button>
+                        <p class="help mt-2 mb-0">You will become the owner and can edit the listing or sell it on.</p>
+                    </form>
+                }
+                else if (Model.IsOwner)
+                {
+                    <div class="callout">
+                        <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-info"></use></svg>
+                        <div>
+                            You own this lot. Manage the price, stock and photo from your inventory.
+                            <div class="mt-1">
+                                <a class="link-arrow" asp-controller="Dashboard" asp-action="EditProduct" asp-route-id="@product.Id">
+                                    Edit listing
+                                    <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-arrow-right"></use></svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+                else if (User.Identity?.IsAuthenticated != true)
+                {
+                    <div class="panel card-pad">
+                        <h3 style="font-size:1.15rem">Ready to buy?</h3>
+                        <p class="text-sm text-muted">Sign in as a customer to add this lot to your cart, or create a free account in seconds.</p>
+                        <div class="hero-actions" style="margin-top:1rem">
+                            <a class="btn btn-primary" asp-controller="Auth" asp-action="Login" asp-route-returnUrl="@returnUrl">Sign in</a>
+                            <a class="btn btn-outline" asp-controller="Auth" asp-action="Register">Create account</a>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="callout warn">
+                        <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-alert"></use></svg>
+                        <div>
+                            This lot is not available to your role right now. It sits at the
+                            <strong>@product.Stage.ToDisplay()</strong> stage and is waiting for a
+                            <strong>@(product.NextRole?.ToDisplay().ToLowerInvariant() ?? "buyer")</strong>.
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+@if (Model.Related.Count > 0)
+{
+    <section class="section-tight">
+        <div class="container">
+            <div class="section-head">
+                <div>
+                    <span class="eyebrow">More like this</span>
+                    <h2>Also fresh right now.</h2>
+                </div>
+                <a class="link-arrow" asp-controller="Marketplace" asp-action="Index" asp-route-category="@product.Category">
+                    See all @product.Category.ToDisplay().ToLowerInvariant()
+                    <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-arrow-right"></use></svg>
+                </a>
+            </div>
+            <div class="product-grid">
+                @foreach (var related in Model.Related)
+                {
+                    <partial name="_ProductCard" model="related" />
+                }
+            </div>
+        </div>
+    </section>
+}

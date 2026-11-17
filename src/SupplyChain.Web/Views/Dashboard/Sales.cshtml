@@ -1,0 +1,190 @@
+@model SalesViewModel
+@{
+    ViewData["Title"] = "Sales";
+    var user = Model.User;
+}
+
+<div class="dash-head">
+    <div>
+        <span class="eyebrow">@user.Role.ToDisplay() ledger</span>
+        <h2>@(Model.ShowOrders ? "Orders from your shelves." : "Lots you've moved.")</h2>
+        <p>
+            @(Model.ShowOrders
+                ? "Every customer order containing your produce, with status and value."
+                : "Each hand-off where you sold produce on to the next link in the chain.")
+        </p>
+    </div>
+    <div class="dash-actions">
+        <a class="btn btn-outline btn-sm" asp-controller="Dashboard" asp-action="Products">
+            <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-package"></use></svg>
+            Inventory
+        </a>
+        <a class="btn btn-outline btn-sm" asp-controller="Dashboard" asp-action="Index">
+            <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-grid"></use></svg>
+            Overview
+        </a>
+    </div>
+</div>
+
+@if (Model.ShowOrders)
+{
+    <div class="panel">
+        <div class="panel-head">
+            <h4>Customer orders</h4>
+            <span class="badge badge-forest">@Model.Orders.Count total</span>
+        </div>
+        <div class="panel-body flush">
+            @if (Model.Orders.Count > 0)
+            {
+                <div class="table-wrap">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Order</th>
+                                <th>Customer</th>
+                                <th>Items</th>
+                                <th>Your share</th>
+                                <th>Status</th>
+                                <th>Placed</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var order in Model.Orders)
+                            {
+                                var myItems = order.Items.Where(x => x.SellerId == user.Id).ToList();
+                                var myShare = myItems.Sum(x => x.LineTotal);
+                                <tr>
+                                    <td><strong>@order.Reference</strong></td>
+                                    <td>
+                                        @(order.Customer?.DisplayName ?? "Customer")
+                                        <div class="text-xs text-muted">@(order.Customer?.City ?? order.ShippingCity)</div>
+                                    </td>
+                                    <td>
+                                        @myItems.Count item@(myItems.Count == 1 ? "" : "s")
+                                        <div class="text-xs text-muted">@string.Join(", ", myItems.Select(x => x.ProductName).Take(2))</div>
+                                    </td>
+                                    <td class="mono">₦@myShare.ToString("N0")</td>
+                                    <td><span class="badge @order.Status.BadgeClass()">@order.Status.ToDisplay()</span></td>
+                                    <td class="text-xs text-muted">@order.CreatedAt.ToString("dd MMM yyyy")</td>
+                                    <td class="table-actions">
+                                        <a class="btn-icon" asp-controller="Orders" asp-action="Details" asp-route-id="@order.Id" aria-label="View order @order.Reference">
+                                            <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-eye"></use></svg>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="empty-state" style="border:0;padding:3rem 1rem">
+                    <span class="icon-badge"><svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-truck"></use></svg></span>
+                    <h3>No orders yet</h3>
+                    <p>When a customer buys your produce, the order will appear here.</p>
+                    <a class="btn btn-primary" asp-controller="Dashboard" asp-action="Products">Review your listings</a>
+                </div>
+            }
+        </div>
+    </div>
+}
+else
+{
+    var total = Model.Deals.Sum(x => x.UnitPrice * x.Quantity);
+    <div class="stat-grid cols-3">
+        <div class="stat-card">
+            <div class="stat-top">
+                <span class="stat-label">Hand-offs</span>
+                <span class="icon-badge"><svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-layers"></use></svg></span>
+            </div>
+            <div class="stat-value" data-count="@Model.Deals.Count">@Model.Deals.Count</div>
+            <div class="stat-foot">Lots sold on</div>
+        </div>
+        <div class="stat-card amber">
+            <div class="stat-top">
+                <span class="stat-label">Sales value</span>
+                <span class="icon-badge amber"><svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-wallet"></use></svg></span>
+            </div>
+            <div class="stat-value">₦@total.ToString("N0")</div>
+            <div class="stat-foot">Across all hand-offs</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-top">
+                <span class="stat-label">Buyers</span>
+                <span class="icon-badge"><svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-users"></use></svg></span>
+            </div>
+            <div class="stat-value" data-count="@Model.Deals.Select(x => x.ToUserId).Distinct().Count()">@Model.Deals.Select(x => x.ToUserId).Distinct().Count()</div>
+            <div class="stat-foot">Partners who bought from you</div>
+        </div>
+    </div>
+
+    <div class="panel">
+        <div class="panel-head">
+            <h4>Hand-off ledger</h4>
+            <span class="badge badge-forest">@Model.Deals.Count record@(Model.Deals.Count == 1 ? "" : "s")</span>
+        </div>
+        <div class="panel-body flush">
+            @if (Model.Deals.Count > 0)
+            {
+                <div class="table-wrap">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Lot</th>
+                                <th>Buyer</th>
+                                <th>Stage moved to</th>
+                                <th>Quantity</th>
+                                <th>Unit price</th>
+                                <th>Value</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var deal in Model.Deals)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="table-product">
+                                            @if (deal.Product is not null)
+                                            {
+                                                <img src="@deal.Product.ImageUrl" alt="" />
+                                                <div>
+                                                    <strong>@deal.Product.Name</strong>
+                                                    <span>@deal.Product.Reference</span>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div><strong>Lot</strong></div>
+                                            }
+                                        </div>
+                                    </td>
+                                    <td>
+                                        @(deal.ToUser?.StoreName is { Length: > 0 } store ? store : deal.ToUser?.DisplayName ?? "Buyer")
+                                        <div class="text-xs text-muted">@deal.Note</div>
+                                    </td>
+                                    <td><span class="badge badge-warn">@deal.ToStage.ToDisplay()</span></td>
+                                    <td>@deal.Quantity</td>
+                                    <td class="mono">₦@deal.UnitPrice.ToString("N0")</td>
+                                    <td class="mono">₦@((deal.UnitPrice * deal.Quantity).ToString("N0"))</td>
+                                    <td class="text-xs text-muted">@deal.CreatedAt.ToString("dd MMM yyyy")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="empty-state" style="border:0;padding:3rem 1rem">
+                    <span class="icon-badge"><svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-chart"></use></svg></span>
+                    <h3>No hand-offs yet</h3>
+                    <p>When you sell a lot on to a distributor or retailer, the sale will be recorded here.</p>
+                    <a class="btn btn-primary" asp-controller="Marketplace" asp-action="Index">Find a lot to acquire</a>
+                </div>
+            }
+        </div>
+    </div>
+}

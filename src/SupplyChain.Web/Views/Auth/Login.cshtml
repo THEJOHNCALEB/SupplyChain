@@ -1,0 +1,57 @@
+@model LoginViewModel
+@{
+    ViewData["Title"] = "Sign in";
+}
+
+<h1>Welcome back.</h1>
+<p class="lead">Sign in to manage your listings, follow orders, or keep shopping fresh produce.</p>
+
+<form method="post" asp-controller="Auth" asp-action="Login" asp-route-returnUrl="@Model.ReturnUrl" novalidate>
+    @Html.AntiForgeryToken()
+    <div asp-validation-summary="ModelOnly"></div>
+
+    <div class="field">
+        <label asp-for="Email">Email address</label>
+        <input class="input" asp-for="Email" type="email" autocomplete="email" placeholder="you@example.com" />
+        <span asp-validation-for="Email" class="validation"></span>
+    </div>
+
+    <div class="field">
+        <label asp-for="Password">Password</label>
+        <div class="password-wrap">
+            <input class="input" asp-for="Password" type="password" id="login-password" autocomplete="current-password" placeholder="Your password" />
+            <button class="password-toggle" type="button" data-password-toggle="login-password" aria-label="Show password">
+                <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-eye"></use></svg>
+            </button>
+        </div>
+        <span asp-validation-for="Password" class="validation"></span>
+    </div>
+
+    <div class="row-between mb-3">
+        <label class="checkbox">
+            <input asp-for="RememberMe" type="checkbox" />
+            <span>Keep me signed in</span>
+        </label>
+        <a class="text-sm text-strong" asp-controller="Home" asp-action="Contact">Need help?</a>
+    </div>
+
+    <button class="btn btn-primary btn-block btn-lg" type="submit">
+        Sign in
+        <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-arrow-right"></use></svg>
+    </button>
+</form>
+
+<div class="demo-box">
+    <strong>Try a demo account</strong><br />
+    Customer: <code>dayo@customer.dev</code> · Farmer: <code>amina@farm.dev</code><br />
+    Password for every demo account: <code>Demo@@123</code>
+</div>
+
+<p class="auth-alt">
+    New to SupplyChain?
+    <a asp-controller="Auth" asp-action="Register">Create an account</a>
+</p>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

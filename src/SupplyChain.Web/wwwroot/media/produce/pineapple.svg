@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="Sweet pineapple">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FBF3C6"/>
+      <stop offset="1" stop-color="#D9C86B"/>
+    </linearGradient>
+    <linearGradient id="fruit" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F7C948"/>
+      <stop offset="1" stop-color="#D99A1E"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#bg)"/>
+  <circle cx="650" cy="110" r="185" fill="#FFFDF2" opacity=".45"/>
+  <circle cx="120" cy="520" r="160" fill="#B4A03A" opacity=".15"/>
+  <ellipse cx="400" cy="520" rx="210" ry="34" fill="#8B7318" opacity=".16"/>
+  <g transform="rotate(-4 400 360)">
+    <ellipse cx="400" cy="380" rx="128" ry="150" fill="url(#fruit)"/>
+    <g stroke="#B77A12" stroke-width="6" opacity=".55" fill="none">
+      <path d="M300 300 500 460M300 360 500 520M300 240 500 400M300 180 500 340M340 168 540 328M400 150 600 310M460 150 650 300"/>
+      <path d="M500 300 300 460M500 360 300 520M500 240 300 400M500 180 300 340M460 168 260 328M400 150 200 310M340 150 140 300"/>
+    </g>
+    <ellipse cx="352" cy="320" rx="24" ry="12" fill="#FFF" opacity=".25" transform="rotate(-30 352 320)"/>
+  </g>
+  <g fill="#4F8A45">
+    <path d="M400 236c-10-70-42-108-92-126 10 56 40 98 92 126Z"/>
+    <path d="M400 236c-2-64 16-108 54-138 6 52-8 96-54 138Z"/>
+    <path d="M400 236c10-58 42-92 88-104-14 46-44 82-88 104Z"/>
+    <path d="M400 236c-30-56-70-82-116-82 28 38 66 66 116 82Z"/>
+    <path d="M400 232c26-52 62-76 106-74-24 34-58 60-106 74Z"/>
+  </g>
+  <g fill="#3F7539">
+    <path d="M400 236c-18-40-50-62-86-62 22 30 50 50 86 62Z"/>
+  </g>
+  <g fill="#B4A03A" opacity=".5">
+    <ellipse cx="214" cy="470" rx="18" ry="9" transform="rotate(-22 214 470)"/>
+    <ellipse cx="580" cy="474" rx="16" ry="8" transform="rotate(18 580 474)"/>
+  </g>
+</svg>

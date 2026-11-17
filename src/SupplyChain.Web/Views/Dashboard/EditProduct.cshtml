@@ -1,0 +1,11 @@
+@model ProductFormViewModel
+@{
+    ViewData["Title"] = "Edit listing";
+    ViewData["FormAction"] = $"/dashboard/products/{Model.Id}/edit";
+    ViewData["FormTitle"] = "Edit listing";
+    ViewData["FormIntro"] = "Keep the price, stock and description accurate so buyers know exactly what to expect.";
+    ViewData["SubmitLabel"] = "Save changes";
+    ViewData["IsEdit"] = true;
+}
+
+<partial name="_ProductForm" model="Model" />

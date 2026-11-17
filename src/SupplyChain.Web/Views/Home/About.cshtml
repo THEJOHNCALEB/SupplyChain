@@ -1,0 +1,89 @@
+@{
+    ViewData["Title"] = "About SupplyChain";
+    ViewData["Description"] = "Why we built a traceable agricultural supply chain for Nigeria.";
+}
+
+<section class="page-head">
+    <div class="container">
+        <div class="breadcrumb">
+            <a asp-controller="Home" asp-action="Index">Home</a>
+            <svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-chevron-right"></use></svg>
+            <span>About</span>
+        </div>
+        <span class="eyebrow">Our story</span>
+        <h1>Good food shouldn't lose its story.</h1>
+        <p class="lead">
+            SupplyChain began with a simple frustration: by the time a yam reached a Lagos kitchen, nobody
+            could say which farm grew it, who moved it, or why the price had doubled.
+        </p>
+    </div>
+</section>
+
+<section class="section-tight">
+    <div class="container split">
+        <div class="story-media reveal">
+            <img src="/media/produce/yam.svg" alt="Fresh white yams" />
+            <div class="story-badge">
+                <strong>4 roles</strong>
+                <span>one shared, accountable chain</span>
+            </div>
+        </div>
+        <div class="reveal">
+            <span class="eyebrow">What we believe</span>
+            <h2>Transparency is the best fertiliser.</h2>
+            <p>
+                When every hand-off is recorded, everyone keeps their promises. Farmers get paid fairly for
+                quality. Distributors compete on service, not obscurity. Retailers know what they are selling.
+                Customers eat better.
+            </p>
+            <p>
+                We are building the rails for that: a single marketplace where produce moves from farm to
+                doorstep with a clear custody trail, honest margins and less waste at every step.
+            </p>
+            <ul class="check-list">
+                <li><svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-check"></use></svg> Built for the realities of Nigerian agriculture.</li>
+                <li><svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-check"></use></svg> Open source, auditable and free to self-host.</li>
+                <li><svg class="icon" aria-hidden="true"><use href="/media/icons.svg#i-check"></use></svg> Designed to make smallholder farms more competitive.</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<section class="section bg-tint">
+    <div class="container">
+        <div class="section-head reveal">
+            <div>
+                <span class="eyebrow">The chain</span>
+                <h2>Four roles. One standard.</h2>
+                <p>Each role owns a stage, and every stage is visible to the next.</p>
+            </div>
+        </div>
+        <div class="chain">
+            @foreach (var role in RoleCatalog.ChainOrder)
+            {
+                <div class="chain-step reveal">
+                    <h4>@RoleCatalog.StageLabel(role) <span class="text-muted">· @role.ToDisplay()</span></h4>
+                    <p>@RoleCatalog.Tagline(role)</p>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="cta-band reveal">
+            <div class="row-between wrap" style="align-items:flex-end">
+                <div>
+                    <span class="eyebrow" style="color:#f0c07a">Join us</span>
+                    <h2>Help build a fairer food chain.</h2>
+                    <p>Whether you grow, move, sell or cook — there is a place for you in the chain.</p>
+                </div>
+                <div class="hero-actions" style="margin-top:0">
+                    <a class="btn btn-primary btn-lg" asp-controller="Auth" asp-action="Register">Create an account</a>
+                    <a class="btn btn-outline btn-lg" asp-controller="Home" asp-action="Contact">Talk to us</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
